@@ -1,0 +1,21 @@
+{
+  "name": "staterx-docs",
+  "version": "0.0.0",
+  "description": "State Management with RxJS",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "dev": "docz dev",
+    "build": "docz build",
+    "serve": "docz build && docz serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "docz": "^2.3.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}

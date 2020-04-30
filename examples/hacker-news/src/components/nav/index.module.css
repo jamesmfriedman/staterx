@@ -1,0 +1,36 @@
+.nav {
+  background: var(--theme-primary);
+  color: var(--theme-text-on-primary);
+}
+
+.nav a {
+  color: inherit;
+}
+
+.nav a:hover {
+  text-decoration: none;
+}
+
+.inner {
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-right: 1rem;
+}
+
+.logo img {
+  margin-right: 1rem;
+  border: 2px solid currentColor;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: inherit;
+}

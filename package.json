@@ -1,0 +1,27 @@
+{
+  "name": "staterx",
+  "version": "0.0.0",
+  "description": "State management with RxJS",
+  "main": "dist/index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "scripts": {
+    "docs": "cd docs && npm run dev",
+    "hackernews": "cd examples/hacker-news && npm start",
+    "build": "tsc",
+    "dev:setup": "npm i && npm run build && cd docs && npm i && cd ../examples/hacker-news && npm i && npm link ../../ && npm dedupe react"
+  },
+  "author": "James M. Friedman",
+  "license": "ISC",
+  "peerDependencies": {
+    "rxjs": "^6.x.x"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.34",
+    "react": "^16.13.1",
+    "rxjs": "^6.5.5",
+    "typescript": "^3.8.3"
+  }
+}

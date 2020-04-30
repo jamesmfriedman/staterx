@@ -1,0 +1,43 @@
+:root {
+  /****************************************
+   * Theme
+   ****************************************/
+  --theme-primary-rgb: rgb(99.6%, 40%, 0.4%) 199;
+  --theme-primary: #fe6601;
+
+  --theme-accent-rgb: 207, 0, 219;
+  --theme-accent: blue;
+
+  --theme-secondary-rgb: 14, 17, 38;
+  --theme-secondary: #0e1126;
+
+  --theme-danger-rgb: 222, 54, 24;
+  --theme-danger: #de3618;
+
+  --theme-success-rgb: 22, 192, 172;
+  --theme-success: #00bfac;
+
+  --theme-surface: #fff;
+  --theme-surface-highlight: var(--theme-background-4);
+
+  --theme-background: #f2f3f5;
+
+  --theme-border: #eaeaed;
+
+  --theme-border-radius: 0.25rem;
+
+  --theme-tooltip: rgb(72, 73, 105, 0.95);
+
+  --theme-text-rgb: 0, 0, 0;
+  --theme-text-default: rgba(var(--theme-text-rgb), 0.93);
+  --theme-text-secondary: rgba(var(--theme-text-rgb), 0.65);
+  --theme-text-hint: rgba(var(--theme-text-rgb), 0.38);
+  --theme-text-disabled: rgba(var(--theme-text-rgb), 0.25);
+  --theme-text-on-primary: #fff;
+  --theme-text-on-secondary: #fff;
+  --theme-text-on-accent: #fff;
+
+  --theme-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}

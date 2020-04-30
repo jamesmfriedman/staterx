@@ -1,0 +1,67 @@
+.text {
+  line-height: 1.6;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+/** Styles */
+.headline {
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.subheading {
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.body {
+  font-size: 1rem;
+}
+
+.caption {
+  font-size: 0.75rem;
+}
+
+/** Modifiers */
+.inline {
+  display: inline;
+}
+
+/** Colors */
+.inherit {
+  color: inherit;
+}
+
+.default {
+  color: var(--theme-text-default);
+}
+
+.secondary {
+  color: var(--theme-text-secondary);
+}
+
+.hint {
+  color: var(--theme-text-hint);
+}
+
+.disabled {
+  color: var(--theme-text-disabled);
+}
+
+.onPrimary {
+  color: var(--theme-text-on-primary);
+}
+
+.onSecondary {
+  color: var(--theme-text-on-secondary);
+}
+
+.onAccent {
+  color: var(--theme-text-on-accent);
+}

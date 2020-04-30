@@ -1,0 +1,15 @@
+.view {
+  max-width: 48rem;
+  margin: 0 auto;
+  display: flex;
+}
+
+.paddingHorizontal {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.paddingVertical {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}

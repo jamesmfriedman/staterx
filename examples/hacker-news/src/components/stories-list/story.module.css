@@ -1,0 +1,33 @@
+.story {
+  padding: 1rem 1.5rem 1rem 5.5rem;
+  counter-increment: feed;
+  position: relative;
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.story:before {
+  content: counter(feed);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+  width: 3.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--theme-text-disabled);
+}
+
+.title {
+  display: inline-block;
+  margin-right: 0.25rem;
+}
+
+.story a {
+  color: inherit;
+}
+
+.story footer a:hover,
+.domain:hover {
+  color: var(--theme-primary);
+}
