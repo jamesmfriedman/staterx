@@ -10,8 +10,9 @@
   "scripts": {
     "docs": "cd docs && npm run dev",
     "hacker-news": "cd examples/hacker-news && npm start",
+    "hacker-news:link": "cd examples/hacker-news && npm link ../../",
     "build": "tsc",
-    "dev:setup": "npm i && npm run build && cd docs && npm i && cd ../examples/hacker-news && npm i && npm link ../../ && npm dedupe react"
+    "dev:setup": "npm i && npm run build && cd docs && npm i && cd ../examples/hacker-news && npm i && npm run hacker-news:link && npm dedupe react"
   },
   "author": "James M. Friedman",
   "license": "ISC",

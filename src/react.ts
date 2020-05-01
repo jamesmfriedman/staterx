@@ -3,7 +3,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 type RxInput<T> = BehaviorSubject<T> | Observable<T>;
 
-export const useRx = <T>(obs$: RxInput<T>, initialValue: T): [T] => {
+export function useRx<T>(obs$: RxInput<T>, initialValue?: T): [T];
+export function useRx<T = undefined>(
+  obs$: RxInput<T>,
+  initialValue?: T
+): [T | undefined];
+
+export function useRx<T>(obs$: RxInput<T>, initialValue: T): [T | undefined] {
   const [value, _setValue] = useState<T>(
     'getValue' in obs$
       ? obs$.getValue()
@@ -18,14 +24,26 @@ export const useRx = <T>(obs$: RxInput<T>, initialValue: T): [T] => {
     };
   }, [obs$]);
 
-  return [value];
-};
+  return [value as any];
+}
 
-export const useRxMemo = <T>(
+export function useRxMemo<T>(
   obsFactory: () => RxInput<T>,
   deps: React.DependencyList | undefined,
   initialValue: T
-): [T] => {
+): [T];
+
+export function useRxMemo<T = undefined>(
+  obsFactory: () => RxInput<T>,
+  deps: React.DependencyList | undefined,
+  initialValue?: T
+): [T | undefined];
+
+export function useRxMemo<T>(
+  obsFactory: () => RxInput<T>,
+  deps: React.DependencyList | undefined,
+  initialValue: T
+): [T] {
   const obs$ = useMemo(obsFactory, deps);
-  return useRx(obs$, initialValue);
-};
+  return useRx<T>(obs$, initialValue);
+}
