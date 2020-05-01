@@ -1,6 +1,6 @@
 .nav {
   background: var(--theme-primary);
-  color: var(--theme-text-on-primary);
+  color: var(--theme-on-primary);
 }
 
 .nav a {
@@ -33,4 +33,15 @@
   font-weight: bold;
   font-size: 1rem;
   color: inherit;
+}
+
+.links a {
+  display: inline-block;
+  padding: 0 0.75rem;
+  line-height: 2rem;
+  border-radius: 9999px;
+}
+
+.links a:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

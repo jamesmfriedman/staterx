@@ -16,7 +16,14 @@ export function Nav() {
 
           <h1 className={styles.title}>Hacker News</h1>
         </Link>
-        <Link to={`/${FeedOptions.newest}`}>New</Link>
+
+        <div className={styles.links}>
+          <Link to={`/${FeedOptions.newstories}`}>New</Link>
+          <Link to={`/${FeedOptions.beststories}`}>Best</Link>
+          <Link to={`/${FeedOptions.askstories}`}>Ask</Link>
+          <Link to={`/${FeedOptions.showstories}`}>Show</Link>
+          <Link to={`/${FeedOptions.jobstories}`}>Jobs</Link>
+        </div>
       </View>
     </nav>
   );

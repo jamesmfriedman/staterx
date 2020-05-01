@@ -9,7 +9,7 @@
   },
   "scripts": {
     "docs": "cd docs && npm run dev",
-    "hackernews": "cd examples/hacker-news && npm start",
+    "hacker-news": "cd examples/hacker-news && npm start",
     "build": "tsc",
     "dev:setup": "npm i && npm run build && cd docs && npm i && cd ../examples/hacker-news && npm i && npm link ../../ && npm dedupe react"
   },

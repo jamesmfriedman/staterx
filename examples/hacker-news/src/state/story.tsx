@@ -1,5 +1,5 @@
 import { zip, from } from 'rxjs';
-import { map, mergeMap, take } from 'rxjs/operators';
+import { map, mergeMap, finalize } from 'rxjs/operators';
 import { object, list } from 'rxfire/database';
 import { createBranch } from 'staterx';
 import { db } from '@state/firebase';
@@ -29,12 +29,13 @@ export type StoryStateT = {
 
 export enum FeedOptions {
   topstories = 'topstories',
-  news = 'news',
-  newest = 'newest',
+  beststories = 'beststories',
+  newstories = 'newstories',
   from = 'from',
   front = 'front',
-  ask = 'ask',
-  show = 'show'
+  askstories = 'askstories',
+  showstories = 'showstories',
+  jobstories = 'jobstories'
 }
 
 /**************************************************
@@ -53,30 +54,24 @@ const branch = createBranch<StoryT, StoryStateT>(undefined, {
   }
 });
 
+/** Get all items sorted properly for the feed */
 const sorted$ = branch.all$.pipe((items) =>
   items.pipe(map((items) => [...items].sort((a, b) => a.order - b.order)))
 );
 
+/** Get all items for a specific domain */
 const byDomain = (domain: string) =>
   sorted$.pipe(map((stories) => stories.filter((s) => s.domain === domain)));
 
+/** Add a story */
 const addStory = (story: Partial<StoryT>) => branch.create(story);
 
+/**
+ * Creates a stream of stories directly from Firebase that will live update
+ * whenever anything changes.
+ */
 const getStoriesFromFirebase = (section: FeedOptions) => {
-  let child = '';
-
-  switch (section) {
-    case FeedOptions.newest:
-      child = 'newstories';
-      break;
-    case FeedOptions.topstories:
-    case FeedOptions.news:
-    default:
-      child = 'topstories';
-      break;
-  }
-
-  return list(db.child(child).limitToFirst(30)).pipe(
+  return list(db.child(section).limitToFirst(30)).pipe(
     map((query) => query.map((q) => q.snapshot.val())),
     mergeMap((ids) => zip(...ids.map((id) => object(db.child(`item/${id}`))))),
     map((queries) =>
@@ -100,6 +95,10 @@ const getStoriesFromFirebase = (section: FeedOptions) => {
   );
 };
 
+/**
+ * The firebase api didn't include the ability to get stories from a specific domain
+ * So this is mixing in some data from Algolia's public hacker news api.
+ */
 const getStoriesFromAlgolia = (domain: string) => {
   return from(
     fetch(
@@ -130,6 +129,10 @@ const getStoriesFromAlgolia = (domain: string) => {
   );
 };
 
+/**
+ * Create a producer / consumer set of observables that will
+ * stream stories directly to the output
+ */
 const onViewFeed = ({
   section,
   domain = ''
@@ -137,24 +140,32 @@ const onViewFeed = ({
   section: FeedOptions;
   domain?: string;
 }) => {
-  let observable$;
+  let producer$;
+  let consumer$;
+
   switch (section) {
     case FeedOptions.from:
-      observable$ = getStoriesFromAlgolia(domain);
+      producer$ = getStoriesFromAlgolia(domain);
+      consumer$ = byDomain(domain);
       break;
-    case FeedOptions.topstories:
-    case FeedOptions.news:
-    case FeedOptions.newest:
     default:
-      observable$ = getStoriesFromFirebase(section);
+      producer$ = getStoriesFromFirebase(section);
+      consumer$ = sorted$;
       break;
   }
 
-  // Reset our current state when we get our first response
-  observable$.pipe(take(1)).subscribe(() => storyState.reset());
-
   // Subscribe to our state
-  return observable$.subscribe((stories) => storyState.update(stories));
+  const creatorSub = producer$
+    .pipe(
+      map((story, index) => {
+        // Empty our previous stories when we switch sections
+        if (index === 0) storyState.reset();
+        return story;
+      })
+    )
+    .subscribe((stories) => storyState.update(stories));
+
+  return consumer$.pipe(finalize(() => creatorSub.unsubscribe()));
 };
 
 export const storyState = {

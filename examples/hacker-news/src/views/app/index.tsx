@@ -5,13 +5,22 @@ import { Nav } from '@src/components/nav';
 import { FeedOptions } from '@src/state';
 import { getQueryParam } from '@src/common/history';
 
+const feedPaths = [
+  FeedOptions.topstories,
+  FeedOptions.newstories,
+  FeedOptions.beststories,
+  FeedOptions.askstories,
+  FeedOptions.showstories,
+  FeedOptions.jobstories
+].join('|');
+
 function App() {
   return (
     <>
       <Nav />
       <Switch>
         <Route
-          path={`/:path(${FeedOptions.news}|${FeedOptions.newest}|${FeedOptions.ask})?`}
+          path={`/:path(${feedPaths})?`}
           exact
           render={({ match }) => (
             <Feed section={match.params.path || FeedOptions.topstories} />

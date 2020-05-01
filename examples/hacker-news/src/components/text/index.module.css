@@ -55,13 +55,13 @@
 }
 
 .onPrimary {
-  color: var(--theme-text-on-primary);
+  color: var(--theme-on-primary);
 }
 
 .onSecondary {
-  color: var(--theme-text-on-secondary);
+  color: var(--theme-on-secondary);
 }
 
 .onAccent {
-  color: var(--theme-text-on-accent);
+  color: var(--theme-on-accent);
 }
