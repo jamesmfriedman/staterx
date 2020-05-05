@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRxMemo } from 'staterx';
-import { storyState, FeedOptions, StoryT } from '@state';
+import { storyState, FeedOptions } from '@state';
 import { StoriesList } from '@src/components/stories-list';
 
 export function Feed({

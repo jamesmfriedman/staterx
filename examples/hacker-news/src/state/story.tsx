@@ -1,7 +1,7 @@
 import { zip, from } from 'rxjs';
-import { map, mergeMap, finalize } from 'rxjs/operators';
+import { map, mergeMap, finalize, scan } from 'rxjs/operators';
 import { object, list } from 'rxfire/database';
-import { createBranch } from 'staterx';
+import { createItems, createValue, createArray } from 'staterx';
 import { db } from '@state/firebase';
 import { rawDomain } from '@src/common/raw-domain';
 
@@ -23,10 +23,6 @@ export type StoryT = {
   domain: string;
 };
 
-export type StoryStateT = {
-  items: { [id: string]: StoryT | undefined };
-};
-
 export enum FeedOptions {
   topstories = 'topstories',
   beststories = 'beststories',
@@ -41,30 +37,6 @@ export enum FeedOptions {
 /**************************************************
  * Utils
  **************************************************/
-const branch = createBranch<StoryT, StoryStateT>(undefined, {
-  name: 'story',
-  defaultItem: {
-    by: '',
-    kids: [],
-    score: 0,
-    text: '',
-    time: 0,
-    title: '',
-    type: 'story'
-  }
-});
-
-/** Get all items sorted properly for the feed */
-const sorted$ = branch.all$.pipe((items) =>
-  items.pipe(map((items) => [...items].sort((a, b) => a.order - b.order)))
-);
-
-/** Get all items for a specific domain */
-const byDomain = (domain: string) =>
-  sorted$.pipe(map((stories) => stories.filter((s) => s.domain === domain)));
-
-/** Add a story */
-const addStory = (story: Partial<StoryT>) => branch.create(story);
 
 /**
  * Creates a stream of stories directly from Firebase that will live update
@@ -129,49 +101,87 @@ const getStoriesFromAlgolia = (domain: string) => {
   );
 };
 
-/**
- * Create a producer / consumer set of observables that will
- * stream stories directly to the output
- */
-const onViewFeed = ({
-  section,
-  domain = ''
-}: {
-  section: FeedOptions;
-  domain?: string;
-}) => {
-  let producer$;
-  let consumer$;
+export const storyState = createItems({} as { [id: string]: StoryT }, {
+  name: 'story',
+  defaultItem: {
+    by: '',
+    kids: [],
+    score: 0,
+    text: '',
+    time: 0,
+    title: '',
+    type: 'story'
+  },
+  effects: ({ all$, reset, merge, create }) => {
+    /** Get all items sorted properly for the feed */
+    const sorted$ = all$.pipe((items) =>
+      items.pipe(map((items) => [...items].sort((a, b) => a.order - b.order)))
+    );
 
-  switch (section) {
-    case FeedOptions.from:
-      producer$ = getStoriesFromAlgolia(domain);
-      consumer$ = byDomain(domain);
-      break;
-    default:
-      producer$ = getStoriesFromFirebase(section);
-      consumer$ = sorted$;
-      break;
+    /** Get all items for a specific domain */
+    const byDomain = (domain: string) =>
+      sorted$.pipe(
+        map((stories) => stories.filter((s) => s.domain === domain))
+      );
+
+    /**
+     * Create a producer / consumer set of observables that will
+     * stream stories directly to the output
+     */
+    const onViewFeed = ({
+      section,
+      domain = ''
+    }: {
+      section: FeedOptions;
+      domain?: string;
+    }) => {
+      let producer$;
+      let consumer$;
+
+      switch (section) {
+        case FeedOptions.from:
+          producer$ = getStoriesFromAlgolia(domain);
+          consumer$ = byDomain(domain);
+          break;
+        default:
+          producer$ = getStoriesFromFirebase(section);
+          consumer$ = sorted$;
+          break;
+      }
+
+      // Subscribe to our state
+      const creatorSub = producer$
+        .pipe(
+          map((story, index) => {
+            // Empty our previous stories when we switch sections
+            if (index === 0) reset();
+            return story;
+          })
+        )
+        .subscribe((stories) => merge(stories));
+
+      return consumer$.pipe(finalize(() => creatorSub.unsubscribe()));
+    };
+
+    return {
+      sorted$,
+      byDomain,
+      onViewFeed,
+      addStory: (story: Partial<StoryT>) => create(story)
+    };
   }
+});
 
-  // Subscribe to our state
-  const creatorSub = producer$
-    .pipe(
-      map((story, index) => {
-        // Empty our previous stories when we switch sections
-        if (index === 0) storyState.reset();
-        return story;
-      })
-    )
-    .subscribe((stories) => storyState.update(stories));
+const counter = createValue(0, {
+  name: 'My Counter',
+  effects: ({ set, state$ }) => ({
+    increment: () => set((val) => val + 1),
+    decrement: () => set((val) => val - 1),
+    allTimeCallCount$: state$.pipe(scan((acc) => acc + 1, 0))
+  })
+});
 
-  return consumer$.pipe(finalize(() => creatorSub.unsubscribe()));
-};
-
-export const storyState = {
-  ...branch,
-  sorted$,
-  byDomain,
-  addStory,
-  onViewFeed
-};
+const arr = createArray([] as number[]);
+arr.state$.subscribe(console.warn);
+arr.push(1);
+arr.pop();

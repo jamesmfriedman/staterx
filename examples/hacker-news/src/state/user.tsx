@@ -1,4 +1,4 @@
-import { createBranch } from 'staterx';
+import { createItems } from 'staterx';
 
 export type UserT = {
   /** The user's unique username. Case-sensitive. Required. */
@@ -15,11 +15,7 @@ export type UserT = {
   submitted: number[];
 };
 
-export type UserStateT = {
-  items: { [id: string]: UserT | undefined };
-};
-
-const branch = createBranch<UserT, UserStateT>(undefined, {
+const branch = createItems({} as { [id: string]: UserT }, {
   name: 'user'
 });
 

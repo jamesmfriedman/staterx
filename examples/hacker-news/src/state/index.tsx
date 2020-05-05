@@ -10,4 +10,4 @@ export const store = createStore({
 
 connectDevTools(store);
 
-store.action$.subscribe((val) => console.log('store', val));
+store.action$.subscribe((val: any) => console.log('store', val));

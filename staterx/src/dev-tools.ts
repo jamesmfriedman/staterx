@@ -24,10 +24,10 @@ interface DevTools {
   error: (message: any) => void;
 }
 
-const extension: DevToolsExtension = (window as any)
-  .__REDUX_DEVTOOLS_EXTENSION__;
-
 export const connectDevTools = (store: ReturnType<typeof createStore>) => {
+  const extension: DevToolsExtension =
+    typeof window !== undefined && (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+
   if (!extension) {
     console.error('No Redux Dev Tools extension detected');
   }

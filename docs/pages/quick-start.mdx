@@ -1,0 +1,51 @@
+---
+name: Quick Start
+route: /quick-start
+---
+
+import { Playground } from 'docz';
+
+# Quick Start
+
+## Install
+
+`npm i staterx rxjs`
+or
+`yarn add staterx rxjs`
+
+## Most basic use case
+
+```js
+import { createValue } from 'staterx';
+
+const counter = createValue(0);
+console.log(counter.get()); // logs 0
+
+counter.set(1);
+console.log(counter.get()); // logs 1
+```
+
+In the most basic example, we have a single value that we are creating and updating imperatively. Obviously in this contrived example, it's not obvious that we have any benefit over using a regular variable.
+
+The real power of this example and StateRx as a whole is that we actualy just created a stateful stream we can hook into by using a handful of idiomatic calls and by reading the values `state$` stream.
+
+Lets update the example to be a bit more fun, and include some RxJS.
+
+```js
+import { createValue } from 'staterx';
+import { map, delay } from 'rxjs/operators';
+
+counter.state$
+  .pipe(
+    delay(1000),
+    map(val => val * 100)
+  )
+  .subscribe(val => console.log(val));
+
+counter.set(1);
+
+// logs 0 after 1 second
+// logs 100 after 2 seconds
+```
+
+RxJS natives are probably thinking "isn't this just a Behavior Subject?" For this example, the answer is "yeah, basically". Single values are easy to deal with. What StateRx provides past this basic example are reusable ways to deal with objects, normalized lists, arrays, or specific domains.
