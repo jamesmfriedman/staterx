@@ -23,7 +23,19 @@ export interface Actions<T> {
     shift: () => {
         type: string;
     };
+    sort: (compareFn?: (a: T, b: T) => number) => {
+        type: string;
+        data: T[];
+    };
+    splice: (start: number, deleteCount?: number, ...items: T[]) => {
+        type: string;
+        data: {
+            start: number;
+            deleteCount?: number;
+            items: T[];
+        };
+    };
 }
 export interface StateRxArray<T> extends CreateStateRxApi<T[]>, Actions<T> {
 }
-export declare const createArray: <T, E>(initialState: T[], options?: CreateArrayOpts<T, E>) => StateRxArray<T> & E;
+export declare const createArray: <T, E>(initialState: T[], options?: CreateArrayOpts<T, E>) => StateRxArray<T> & import("./create-staterx").CloneApi<any, StateRxArray<T>, E> & E;

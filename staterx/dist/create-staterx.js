@@ -27,7 +27,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-import { Subject, merge } from 'rxjs';
+import { BehaviorSubject, Subject, merge } from 'rxjs';
 import { genRandomString, createConstants, wrapDispatchSubject } from './utils';
 import { distinctUntilChanged, map, mergeMap } from 'rxjs/operators';
 var DEFAULT_CONSTANTS = ['SET', 'RESET'];
@@ -86,6 +86,10 @@ export var createStateRx = function (initialState, options, overrides) {
             initialState: initialState
         })
     });
+    var clone = function (newInitialState) {
+        if (newInitialState === void 0) { newInitialState = get(); }
+        return createStateRx(newInitialState, options, __assign(__assign({}, overrides), { state$: new BehaviorSubject(newInitialState) }));
+    };
     var _reducer$ = action$.pipe(map(function (action) { return reducer(state$.getValue(), action); }), distinctUntilChanged());
     var run = function () { return _reducer$.subscribe(state$); };
     var api = __assign(__assign(__assign(__assign({}, actions), selectors), baseActions), { name: name,
@@ -94,6 +98,7 @@ export var createStateRx = function (initialState, options, overrides) {
         constant: constant,
         run: run,
         get: get,
+        clone: clone,
         dispatch: dispatch,
         _reducer$: _reducer$ });
     var effects = (_a = options.effects) === null || _a === void 0 ? void 0 : _a.call(options, api);

@@ -31,6 +31,10 @@ export interface CreateStateRxApi<S> {
   _dispatchers$: Subject<Subject<AnyAction<any>>>;
 }
 
+export interface CloneApi<State, Api, Effects> {
+  clone: (initialState?: State) => Api & Effects;
+}
+
 type CreateReducer<T, S> = (params: {
   constant: Constants;
   initialState: S;
@@ -151,6 +155,12 @@ export const createStateRx = <
     })
   });
 
+  const clone = (newInitialState: State = get()) =>
+    createStateRx(newInitialState, options, {
+      ...overrides,
+      state$: new BehaviorSubject<State>(newInitialState)
+    });
+
   const _reducer$ = action$.pipe(
     map((action) => reducer(state$.getValue(), action)),
     distinctUntilChanged()
@@ -168,11 +178,12 @@ export const createStateRx = <
     constant,
     run,
     get,
+    clone,
     dispatch,
     _reducer$
-  } as unknown) as Api;
+  } as unknown) as Api & CloneApi<State, Api, Effects>;
 
-  const effects = options.effects?.((api as unknown) as Api) as Effects;
+  const effects = options.effects?.(api) as Effects;
 
   autoRun && run();
 

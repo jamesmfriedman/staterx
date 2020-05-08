@@ -3,4 +3,4 @@ export interface CreateValueOpts<T, E> extends CreateStateRxOpts<E, StateRxValue
 }
 export interface StateRxValue<T> extends CreateStateRxApi<T> {
 }
-export declare const createValue: <T, E>(initialState: T, options?: CreateValueOpts<T, E>) => StateRxValue<T> & E;
+export declare const createValue: <T, E>(initialState: T, options?: CreateValueOpts<T, E>) => StateRxValue<T> & import("./create-staterx").CloneApi<T, StateRxValue<T>, E> & E;

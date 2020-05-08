@@ -5,7 +5,10 @@
   "scripts": {
     "docs": "cd docs && npm run dev",
     "hacker-news": "cd examples/hacker-news && npm start",
-    "dev:setup": "cd staterx && npm i && npm run build && cd ../docs && npm i && cd ../examples/hacker-news && npm i && npm link ../../staterx"
+    "hacker-news:setup": "cd ./examples/hacker-news && npm i && npm link ../../staterx",
+    "pong": "cd examples/pong && npm start",
+    "pong:setup": "cd ./examples/pong && npm i && npm link ../../staterx",
+    "dev:setup": "cd staterx && npm i && npm run build && cd ../docs && npm i"
   },
   "author": "James M. Friedman",
   "license": "ISC"

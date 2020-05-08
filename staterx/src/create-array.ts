@@ -20,6 +20,15 @@ export interface Actions<T> {
   push: (...data: T[]) => { type: string; data: T[] };
   reverse: () => { type: string };
   shift: () => { type: string };
+  sort: (compareFn?: (a: T, b: T) => number) => { type: string; data: T[] };
+  splice: (
+    start: number,
+    deleteCount?: number,
+    ...items: T[]
+  ) => {
+    type: string;
+    data: { start: number; deleteCount?: number; items: T[] };
+  };
 }
 
 export interface StateRxArray<T> extends CreateStateRxApi<T[]>, Actions<T> {}
@@ -40,7 +49,18 @@ const createActions = <T>({
     pop: () => dispatch({ type: constant.POP }),
     push: (...data) => dispatch({ type: constant.PUSH, data }),
     reverse: () => dispatch({ type: constant.REVERSE }),
-    shift: () => dispatch({ type: constant.SHIFT })
+    shift: () => dispatch({ type: constant.SHIFT }),
+    sort: (compareFn) =>
+      dispatch({ type: constant.SORT, data: get().slice().sort(compareFn) }),
+    splice: (start, deleteCount, ...items) =>
+      dispatch({
+        type: constant.SPLICE,
+        data: {
+          start,
+          deleteCount,
+          items
+        }
+      })
   };
 };
 
@@ -67,6 +87,16 @@ const createReducer = ({ constant }: { constant: Constants }) => (
       const shiftClone = state.slice();
       shiftClone.shift();
       return shiftClone;
+    case constant.SORT:
+      return action.data;
+    case constant.SPLICE:
+      const spliceClone = state.slice();
+      spliceClone.splice(
+        action.data.start,
+        action.data.deleteCount,
+        ...action.data.items
+      );
+      return spliceClone;
     default:
       return state;
   }
@@ -78,7 +108,16 @@ export const createArray = <T, E>(
 ) =>
   createStateRx(initialState, options, {
     state$: new BehaviorSubject<T[]>(initialState),
-    constants: ['CONCAT', 'MAP', 'POP', 'PUSH', 'REVERSE', 'SHIFT'],
+    constants: [
+      'CONCAT',
+      'MAP',
+      'POP',
+      'PUSH',
+      'REVERSE',
+      'SHIFT',
+      'SORT',
+      'SPLICE'
+    ],
     createActions,
     createReducer
   });

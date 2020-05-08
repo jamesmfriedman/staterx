@@ -20,6 +20,9 @@ export interface CreateStateRxApi<S> {
     dispatch: <A extends AnyAction>(action: A) => A;
     _dispatchers$: Subject<Subject<AnyAction<any>>>;
 }
+export interface CloneApi<State, Api, Effects> {
+    clone: (initialState?: State) => Api & Effects;
+}
 declare type CreateReducer<T, S> = (params: {
     constant: Constants;
     initialState: S;
@@ -36,5 +39,5 @@ export declare const createStateRx: <T, State, Effects, ConstantsArray extends s
     createReducer: CreateReducer<T, State>;
     createActions: CreateActions<T, State, Actions>;
     createSelectors?: CreateSelectors<T, State, Selectors> | undefined;
-}) => Api & Effects;
+}) => Api & CloneApi<State, Api, Effects> & Effects;
 export {};

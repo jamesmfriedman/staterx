@@ -24,5 +24,5 @@ export interface StateRxItems<T, S> extends CreateStateRxApi<S> {
         [key: string]: T[] | undefined;
     }>;
 }
-export declare const createItems: <T extends AnyItem, E>(initialState: ItemState<T>, options?: CreateItemOpts<T, ItemState<T>, E>) => StateRxItems<T, ItemState<T>> & E;
+export declare const createItems: <T extends AnyItem, E>(initialState: ItemState<T>, options?: CreateItemOpts<T, ItemState<T>, E>) => StateRxItems<T, ItemState<T>> & import("./create-staterx").CloneApi<ItemState<T>, StateRxItems<T, ItemState<T>>, E> & E;
 export {};

@@ -3,14 +3,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 type RxInput<T> = BehaviorSubject<T> | Observable<T>;
 
-export function useRx<T>(obs$: RxInput<T>, initialValue?: T): [T];
-export function useRx<T = undefined>(
-  obs$: RxInput<T>,
+export function useRx<T>(obs$: RxInput<T>, initialValue: T): [T];
+export function useRx<T, I = RxInput<T>>(
+  obs$: I | RxInput<T>,
   initialValue?: T
-): [T | undefined];
+): [I extends BehaviorSubject<T> ? T : T | undefined];
 
 export function useRx<T>(obs$: RxInput<T>, initialValue: T): [T | undefined] {
-  const [value, _setValue] = useState<T>(
+  const [value, setValue] = useState<T>(
     'getValue' in obs$
       ? obs$.getValue()
       : initialValue ?? ((undefined as unknown) as T)
@@ -18,13 +18,13 @@ export function useRx<T>(obs$: RxInput<T>, initialValue: T): [T | undefined] {
 
   // subscribe to observable
   useLayoutEffect(() => {
-    const sub = obs$.subscribe(_setValue);
+    const sub = obs$.subscribe(setValue);
     return () => {
       sub.unsubscribe();
     };
   }, [obs$]);
 
-  return [value as any];
+  return [value as T];
 }
 
 export function useRxMemo<T>(

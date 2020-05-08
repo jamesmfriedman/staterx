@@ -7,4 +7,4 @@ export interface StateRxObject<T> extends CreateStateRxApi<T> {
         data: T;
     };
 }
-export declare const createObject: <T extends {}, E>(initialState: T, options?: CreateObjectOpts<T, E>) => StateRxObject<T> & E;
+export declare const createObject: <T extends {}, E>(initialState: T, options?: CreateObjectOpts<T, E>) => StateRxObject<T> & import("./create-staterx").CloneApi<T, StateRxObject<T>, E> & E;
