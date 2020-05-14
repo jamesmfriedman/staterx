@@ -53,7 +53,6 @@ body {
   width: 1rem;
   height: 8rem;
   background: currentColor;
-  border-radius: 999px;
 }
 
 .scores {
@@ -69,4 +68,9 @@ body {
   text-align: center;
   font-size: 4rem;
   padding: 1rem;
+}
+
+.canvas {
+  width: 100vw;
+  height: 100vh;
 }

@@ -56,39 +56,39 @@ const speed = createValue(500 / FPS, {
   effects: ({ set }) => ({ increase: () => set((val) => val * 1.1) })
 });
 
-export const boardState = createObject({
+export const board = createObject({
   width: window.innerWidth,
   height: window.innerHeight
 });
 
-export const ballState = createObject(
+export const ball = createObject(
   {
-    x: boardState.get().width / 2 - 16,
-    y: boardState.get().height / 2 - 16,
+    x: board.get().width / 2 - 16,
+    y: board.get().height / 2 - 16,
     width: 32,
     height: 32,
     dirX: getRandomBool() ? 1 : -1,
     dirY: getRandomFloat(-1, 1)
   },
   {
-    effects: ({ merge, get }) => {
+    effects: () => {
       return {
         serve: () => {
           speed.reset();
-          merge({
-            x: boardState.get().width / 2 - 16,
-            y: boardState.get().height / 2 - 16,
+          ball.merge({
+            x: board.get().width / 2 - 16,
+            y: board.get().height / 2 - 16,
             dirX: getRandomBool() ? 1 : -1,
             dirY: getRandomFloat(-1, 1)
           });
         },
         tick: () => {
           const currSpeed = speed.get();
-          const p1 = p1State.get();
-          const p2 = p2State.get();
-          const ball = get();
-          const { width: boardWidth, height: boardHeight } = boardState.get();
-          const { x, y, dirX, dirY, width, height } = ball;
+          const p1State = p1.get();
+          const p2State = p2.get();
+          const ballState = ball.get();
+          const { width: boardWidth, height: boardHeight } = board.get();
+          const { x, y, dirX, dirY, width, height } = ballState;
 
           const newY = y + dirY * currSpeed;
 
@@ -100,32 +100,32 @@ export const ballState = createObject(
             height
           };
 
-          for (const p of [p1, p2]) {
+          for (const p of [p1State, p2State]) {
             const isHit = hittest(p, newBounds);
             if (isHit) {
               speed.increase();
-              return merge({
+              return ball.merge({
                 ...newBounds,
                 dirX: dirX * -1,
-                dirY: getDeflectionAngle(p, ball)
+                dirY: getDeflectionAngle(p, ballState)
               });
             }
           }
 
           if (x < 0 || x > boardWidth) {
-            if (x < 0) p1State.scorePoint();
-            if (x > boardWidth) p2State.scorePoint();
-            return ballState.serve();
+            if (x < 0) p1.scorePoint();
+            if (x > boardWidth) p2.scorePoint();
+            return ball.serve();
           }
 
-          merge(newBounds);
+          ball.merge(newBounds);
         }
       };
     }
   }
 );
 
-const playerState = createObject(
+const player = createObject(
   {
     x: 0,
     y: 0,
@@ -135,24 +135,25 @@ const playerState = createObject(
     score: 0
   },
   {
-    effects: ({ state$, merge, get, set }) => ({
-      score$: state$.pipe(
+    effects: (p) => ({
+      score$: p.state$.pipe(
         distinctUntilKeyChanged('score'),
         map((val) => val.score)
       ),
-      moveUp: () => merge({ moveDir: -1 }),
-      moveDown: () => merge({ moveDir: 1 }),
-      stopMove: () => merge({ moveDir: 0 }),
-      scorePoint: () => set((state) => ({ ...state, score: state.score + 1 })),
+      moveUp: () => p.merge({ moveDir: -1 }),
+      moveDown: () => p.merge({ moveDir: 1 }),
+      stopMove: () => p.merge({ moveDir: 0 }),
+      scorePoint: () =>
+        p.set((state) => ({ ...state, score: state.score + 1 })),
       tick: () => {
-        const { moveDir, y, height } = get();
+        const { moveDir, y, height } = p.get();
         const s = speed.get();
 
         moveDir &&
-          merge({
+          p.merge({
             y:
               moveDir === 1
-                ? Math.min(boardState.get().height - height, y + s)
+                ? Math.min(board.get().height - height, y + s)
                 : Math.max(0, y - s)
           });
       }
@@ -160,18 +161,18 @@ const playerState = createObject(
   }
 );
 
-export const p1State = playerState.clone({
+export const p1 = player.clone({
   x: PADDLE_MARGIN,
-  y: boardState.get().height / 2 - 64,
+  y: board.get().height / 2 - 64,
   width: 16,
   height: 128,
   moveDir: 0,
   score: 0
 });
 
-export const p2State = playerState.clone({
-  x: boardState.get().width - PADDLE_MARGIN,
-  y: boardState.get().height / 2 - 64,
+export const p2 = player.clone({
+  x: board.get().width - PADDLE_MARGIN,
+  y: board.get().height / 2 - 64,
   width: 16,
   height: 128,
   moveDir: 0,
@@ -179,21 +180,23 @@ export const p2State = playerState.clone({
 });
 
 export const initGame = () => {
-  loop$
+  // Handle the game loop
+  const loopSub = loop$
     .pipe(
       tap(() => {
-        ballState.tick();
-        p1State.tick();
-        p2State.tick();
+        ball.tick();
+        p1.tick();
+        p2.tick();
       })
     )
     .subscribe();
 
-  keyDown$
+  // Bind player controls
+  const keySub = keyDown$
     .pipe(
       map((evt) => evt.which),
       map((keycode) => {
-        const player = [38, 40].includes(keycode) ? p2State : p1State;
+        const player = [38, 40].includes(keycode) ? p2 : p1;
 
         switch (keycode) {
           case 38:
@@ -211,12 +214,15 @@ export const initGame = () => {
     )
     .subscribe();
 
-  windowResize$.subscribe(() => {
-    boardState.set({
+  // Handle window resizing
+  const windowSub = windowResize$.subscribe(() => {
+    board.set({
       width: window.innerWidth,
       height: window.innerHeight
     });
 
-    p2State.merge({ x: boardState.get().width - PADDLE_MARGIN });
+    p2.merge({ x: board.get().width - PADDLE_MARGIN });
   });
+
+  return () => [loopSub, keySub, windowSub].map((sub) => sub.unsubscribe());
 };
