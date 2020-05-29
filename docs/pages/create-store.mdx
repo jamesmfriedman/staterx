@@ -1,0 +1,75 @@
+---
+name: createStore
+route: /staterx-api/create-store
+menu: Api
+---
+
+# createStore
+
+Creates an observable centralized store with actions and a dispatcher, similar to Redux or other flux patterns.
+
+```js
+createStore({[name: string]: Observable | StateRxObject})
+```
+
+```js
+import { createStore, createValue, connectDevTools } from 'staterx';
+
+// You can optionally pass a name to identify your StateRx
+// Object. If not, a name will be generated for you.
+const myValue = createValue(0, { name: 'myValue' });
+const anotherValue = createValue('Hello', { name: 'anotherValue' });
+
+const store = createStore({
+  [myValue.name]: myValue,
+  [anotherValue.name]: anoterValue
+});
+
+// optionally connect redux-dev-tools
+connectDevTools(store);
+
+// you can subscribe to all store actions
+store.action$.subscribe(action => console.log(action));
+
+// dispatch actions across ALL branches of your state
+store.dispatch({ type: 'hello' });
+
+// Subscribe to any changes to global state
+// Logs {myValue: 0, anotherValue: 'Hello'}
+store.state$.subscribe(state => console.log(state));
+```
+
+## state$
+
+An observable that emits the entire store's state anytime it changes.
+
+```js
+store.state$.subscribe(state => console.log(state));
+```
+
+## action$
+
+For Flux implementations, an observable that emits all actions dispatched to the store.
+
+```js
+store.action$.subscribe(state => console.log(state));
+```
+
+## dispatch
+
+For Flux implementations, a function to dispatch a new action.
+
+```js
+store.dispatch({type: 'myAction'});
+```
+
+## setState
+
+Set a new state for the entire store. This will go through each individal Observable and update its value. Please note, this will only be able to update parts or your store that use StateRx Objects or Behavior Subjects. An attempt to update a plain Observable will trigger a warning.
+
+```js
+store.setState({
+  [myValue.name]: 1,
+  [anotherValue.name]: 'Test'
+});
+```

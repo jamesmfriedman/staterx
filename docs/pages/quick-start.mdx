@@ -4,6 +4,8 @@ route: /quick-start
 ---
 
 import { Playground } from 'docz';
+import { useRx } from 'staterx';
+import { counter } from './examples';
 
 # Quick Start
 
@@ -13,39 +15,84 @@ import { Playground } from 'docz';
 or
 `yarn add staterx rxjs`
 
-## Most basic use case
+## Counter Example
 
 ```js
 import { createValue } from 'staterx';
 
+// create a counter
+// counter holds a value and a basic api
+// get, set, reset, and state$
 const counter = createValue(0);
-console.log(counter.get()); // logs 0
 
-counter.set(1);
+console.log(counter.get()); // logs 0
+counter.set(1); // update the value
 console.log(counter.get()); // logs 1
 ```
 
-In the most basic example, we have a single value that we are creating and updating imperatively. Obviously in this contrived example, it's not obvious that we have any benefit over using a regular variable.
+In the most basic example, we have a single value that we are creating and updating imperatively. RxJS natives are probably thinking "isn't this just a Behavior Subject?" Obviously in this contrived example, it's not obvious that we have any benefit over using a regular variable.
 
-The real power of this example and StateRx as a whole is that we actualy just created a stateful stream we can hook into by using a handful of idiomatic calls and by reading the values `state$` stream.
+The real power of this example is that we actualy just created a stateful stream we can hook into by using RxJS as well as an idiomatic api for basic functionality like getting and setting. We can also specify `effects` to indicate how we want this variable to change over time.
 
-Lets update the example to be a bit more fun, and include some RxJS.
+## Effects
+
+Noun: *a change which is a result or consequence of an action or other cause.*<br/>
+Verb: *cause (something) to happen; bring about.*
+
+> One of this inspirations for this library was an article (that I can no longer find to link to...) that talked about how state management in JS has gotten out of control over the years. After years of doing Redux we've ended up with Stores, Dispatchers, Actions, Selectors, Thunks, Epics, Sagas, Side Effects, and Actors. For StateRx, these concepts are just called "effects".
+
+
+Effects allow us to specify how we want to change one of our stateful values, and also how we would like to read them through computed changes. If you're coming from Redux, you might have heard them referred to as "actions" and "selectors".
+
+Lets update our example to be a bit more useful and include some effects.
 
 ```js
 import { createValue } from 'staterx';
-import { map, delay } from 'rxjs/operators';
+import { scan } from 'rxjs/operators';
 
-counter.state$
-  .pipe(
-    delay(1000),
-    map(val => val * 100)
-  )
-  .subscribe(val => console.log(val));
+const counter = createValue(0, {
+  effects: ({ state$ }) => ({
+    // here we create two functions that describe how we want to change our value
+    increment: () => counter.set(val => val + 1),
+    decrement: () => counter.set(val => val - 1),
+    // here we create an observable that can keep count of the total number of
+    // times our counter has changed, regardless of direction
+    callCount$: state$.pipe(scan(acc => acc + 1, -1))
+  })
+});
 
-counter.set(1);
+counter.state$.subscribe(val => console.log(val)); // logs 0
+counter.increment(); // logs 1
+counter.decrement(); // logs 0
 
-// logs 0 after 1 second
-// logs 100 after 2 seconds
+// we can also subscribe to our callCount$ effect
+counter.callCount$.subscribe(val => console.log(val));
 ```
 
-RxJS natives are probably thinking "isn't this just a Behavior Subject?" For this example, the answer is "yeah, basically". Single values are easy to deal with. What StateRx provides past this basic example are reusable ways to deal with objects, normalized lists, arrays, or specific domains.
+## React Example
+
+StateRx ships with a hooks for React so you can directly consume your state in your components. Just import `useRx` and pass your variable's state$ to the hook. `useRx` actually works with more than just StateRx, you can pass any RxJS Observable.
+
+```js
+import { createValue, useRx } from 'staterx';
+```
+
+<Playground>{() => {
+  const [count] = useRx(counter.state$);
+  const [numCalls] = useRx(counter.callCount$);
+  return <>
+    <button onClick={counter.decrement}>
+      - Decrement
+    </button>
+    <button onClick={counter.increment}>
+      + Increment
+    </button>
+    <button onClick={counter.reset}>
+      Reset
+    </button>
+    <ul>
+      <li>Count: {count}</li>
+      <li>Num Calls: {numCalls}</li>
+    </ul>
+  </>  
+}}</Playground>

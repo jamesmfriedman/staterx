@@ -1,0 +1,92 @@
+---
+name: Flux
+route: /guides/flux
+menu: Guides
+---
+
+# Flux
+
+StateRx optionally supports flux style architectures out of the box. Under the hood, all of the imperative calls are actually implemented using reducers, dispatchers, and actions. `get`, `set`, `reset` and other effects are actually just action creators.
+
+## Handling actions
+
+A dispatch function and an observable of actions is available on every State Object so you can dispatch and subscribe accoringly.
+
+```js
+import { createValue } from 'staterx';
+const myValue = createValue(0);
+
+myValue.action$.subscribe(action => console.log(action));
+myValue.dispatch({ type: 'helloWorld' }); // logs {type: 'helloWorld'}
+```
+
+If you're used to the actionCreator pattern, you can use effects to write your own actionCreators. The following example is functionally equivalent to the one above, just a bit more reusable.
+
+```js
+import { createValue } from 'staterx';
+const myValue = createValue(0, {
+  effects: ({ dispatch }) => ({
+    hellWorld: () => dispatch({ type: 'helloWorld' })
+  })
+});
+
+myValue.action$.subscribe(action => console.log(action));
+myValue.helloWorld(); // logs {type: 'helloWorld'}
+```
+
+## Adding your own reducer
+
+You can extend the built in reducer functionality with a reducer of your own. These are executed after any of the built in reducers.
+
+```js
+const myValue = createValue(0, {
+  reducer: (state, action) => {
+    switch (action.type) {
+      case 'increment':
+        return state + 1;
+      case 'decrement':
+        return state - 1;
+      default:
+        return state;
+    }
+  }
+});
+
+myValue.dispatch({ type: 'increment' });
+console.log(myValue.get()); // logs 1;
+```
+
+## Creating a global store
+
+One of the main differences between StateRx and a typical Flux architecture is that each State Object has its own dispatcher. StateRx includes a `createStore` factory that can combine multiple State Objects into a single global store.
+
+`createStore` takes an object of strings pointing to either StateRx Objects or plain Observables.
+
+> StateRx has alpha support for Redux Dev Tools so you can inspect your current state and view changes over time. Just install the Chrome Redux Dev Tools extension and then use `connectDevTools`.
+
+```js
+import { createStore, createValue, connectDevTools } from 'staterx';
+
+// You can optionally pass a name to identify your StateRx
+// Object. If not, a name will be generated for you.
+const myValue = createValue(0, { name: 'myValue' });
+const anotherValue = createValue('Hello', { name: 'anotherValue' });
+
+const store = createStore({
+  [myValue.name]: myValue,
+  [anotherValue.name]: anoterValue
+});
+
+// optionally connect redux-dev-tools
+connectDevTools(store);
+
+// you can subscribe to all store actions
+store.action$.subscribe(action => console.log(action));
+
+// dispatch actions across ALL branches of your state
+store.dispatch({ type: 'hello' });
+
+// Subscribe to any changes to global state
+// Logs {myValue: 0, anotherValue: 'Hello'}
+store.state$.subscribe(state => console.log(state));
+```

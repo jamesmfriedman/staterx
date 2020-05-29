@@ -60,7 +60,6 @@ var createActions = function (_a) {
  *******************************************************/
 var createSelectors = function (state$) {
     var all$ = state$.pipe(map(function (state) { return Object.values(state); }));
-    var mapById$ = state$.pipe(map(function (state) { return state; }));
     var byId = function (id) { return state$.pipe(map(function (state) { return state[id]; })); };
     var byIds = function (ids) {
         return state$.pipe(map(function (state) {
@@ -87,7 +86,6 @@ var createSelectors = function (state$) {
     };
     return {
         all$: all$,
-        mapById$: mapById$,
         byId: byId,
         byIds: byIds,
         mapByKey: mapByKey

@@ -14,10 +14,11 @@ import { distinctUntilChanged, map, mergeMap } from 'rxjs/operators';
 
 const DEFAULT_CONSTANTS = ['SET', 'RESET'];
 
-export interface CreateStateRxOpts<E, Api> {
+export interface CreateStateRxOpts<E, Api, State> {
   name?: string;
   autoRun?: boolean;
   effects?: (srx: Api) => E;
+  reducer?: (state: State, action: AnyAction) => State;
 }
 
 export interface CreateStateRxApi<S> {
@@ -82,11 +83,13 @@ const createBaseActions = <T>({
 const createBaseReducer = <S>({
   initialState,
   constant,
-  reducer
+  reducer,
+  userReducer
 }: {
   initialState: S;
   constant: Constants;
   reducer: Reducer;
+  userReducer: Reducer;
 }) => (state: any, action: AnyAction): S => {
   const type = action.type.split('/', 2).join('/');
 
@@ -96,7 +99,10 @@ const createBaseReducer = <S>({
     case constant.RESET:
       return initialState;
     default:
-      return reducer(state, action);
+      const res = reducer(state, action);
+      // if the result is the same as our initial state
+      // pass it on to the user reducer
+      return res === state ? userReducer(state, action) : res;
   }
 };
 
@@ -110,7 +116,7 @@ export const createStateRx = <
   Api extends CreateStateRxApi<State>
 >(
   initialState: State,
-  options: CreateStateRxOpts<Effects, Api> = {},
+  options: CreateStateRxOpts<Effects, Api, State> = {},
   overrides: {
     state$: BehaviorSubject<State>;
     constants: ConstantsArray;
@@ -119,7 +125,11 @@ export const createStateRx = <
     createSelectors?: CreateSelectors<T, State, Selectors>;
   }
 ) => {
-  const { name = genRandomString(), autoRun = true } = options;
+  const {
+    name = genRandomString(),
+    autoRun = true,
+    reducer: userReducer = (state) => state
+  } = options;
 
   const {
     state$,
@@ -152,7 +162,8 @@ export const createStateRx = <
     reducer: createReducer({
       constant,
       initialState
-    })
+    }),
+    userReducer
   });
 
   const clone = (newInitialState: State = get()) =>

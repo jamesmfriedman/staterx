@@ -17,7 +17,6 @@ export interface StateRxItems<T, S> extends CreateStateRxApi<S> {
     merge: (items: ItemsT<T>) => AnyAction<string>;
     remove: (items: ItemsT<T> | string | string[]) => AnyAction<string>;
     all$: Observable<T[]>;
-    mapById$: Observable<ItemState<T>>;
     byId: (id: string) => Observable<T | undefined>;
     byIds: (ids: (string | null | undefined)[]) => Observable<ItemState<T>>;
     mapByKey: (key: string) => Observable<{

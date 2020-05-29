@@ -57,9 +57,9 @@ const createActions = <T, S>({
       });
     },
 
-    merge: (items: ItemsT<T>) => {
+    update: (items: ItemsT<T>) => {
       return dispatch({
-        type: constant.MERGE,
+        type: constant.UPDATE,
         items: ensureArray<T>(items)
       });
     },
@@ -92,7 +92,6 @@ const createSelectors = <T extends AnyItem, S>(
   state$: Observable<ItemState<T>>
 ) => {
   const all$ = state$.pipe(map((state) => Object.values(state) as T[]));
-  const mapById$ = state$.pipe(map((state) => state));
 
   const byId = (id: string) => state$.pipe(map((state) => state[id]));
   const byIds = (ids: Array<string | null | undefined>) =>
@@ -127,7 +126,6 @@ const createSelectors = <T extends AnyItem, S>(
 
   return {
     all$,
-    mapById$,
     byId,
     byIds,
     mapByKey
@@ -163,8 +161,8 @@ const createReducer = <T extends AnyItem>({
         ...state,
         ...newCreateItems
       };
-    case constant.MERGE:
-      const newMergedItems = (items as T[]).reduce<{ [id: string]: T }>(
+    case constant.UPDATE:
+      const newUpdatedItems = (items as T[]).reduce<{ [id: string]: T }>(
         (acc, item) => {
           acc[item.id] = {
             ...(state[item.id] || {}),
@@ -177,7 +175,7 @@ const createReducer = <T extends AnyItem>({
 
       return {
         ...state,
-        ...newMergedItems
+        ...newUpdatedItems
       };
     case constant.REPLACE:
       const newReplaceItems = items.reduce<{ [id: string]: T }>((acc, item) => {
@@ -210,17 +208,18 @@ const createReducer = <T extends AnyItem>({
  * Item State
  *******************************************************/
 export interface CreateItemOpts<T, S, E>
-  extends CreateStateRxOpts<E, StateRxItems<T, S>> {
+  extends CreateStateRxOpts<E, StateRxItems<T, S>, S> {
+  /** A default item to shallowly merge into newly created items. */
   defaultItem?: Partial<T>;
+  /** A custom method for generating IDs for new items. */
   generateId?: () => string;
 }
 
 export interface StateRxItems<T, S> extends CreateStateRxApi<S> {
   create: (items: ItemsT<T> | undefined) => AnyAction<string>;
-  merge: (items: ItemsT<T>) => AnyAction<string>;
+  update: (items: ItemsT<T>) => AnyAction<string>;
   remove: (items: ItemsT<T> | string | string[]) => AnyAction<string>;
   all$: Observable<T[]>;
-  mapById$: Observable<ItemState<T>>;
   byId: (id: string) => Observable<T | undefined>;
   byIds: (ids: (string | null | undefined)[]) => Observable<ItemState<T>>;
   mapByKey: (
@@ -238,7 +237,7 @@ export const createItems = <T extends AnyItem, E>(
 
   return createStateRx(initialState, options, {
     state$: new BehaviorSubject<ItemState<T>>(initialState),
-    constants: ['SET', 'CREATE', 'REPLACE', 'REMOVE', 'MERGE', 'RESET'],
+    constants: ['SET', 'CREATE', 'REPLACE', 'REMOVE', 'UPDATE', 'RESET'],
     createActions: (props) =>
       createActions({ ...props, generateId, defaultItem }),
     createReducer,

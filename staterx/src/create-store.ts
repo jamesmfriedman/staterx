@@ -65,7 +65,7 @@ export const createStore = (
         obs.next(newValue);
       } else {
         console.warn(
-          `Cannot set store value of ${key}. It is not a StateRx object or subject.`
+          `Cannot set store value of ${key}. It is not a StateRx Objects or subject.`
         );
       }
     }

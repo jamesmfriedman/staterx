@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
+.colorExample {
+  color: white;
+  width: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  display: inline-block;
+  margin: 0.25rem;
+  transition: 0.3s;
+  border-radius: 0.375rem;
+}
+
+[data-testid='live-preview'] button {
+  line-height: 2.25rem;
+  background: black;
+  color: white;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  padding: 0 0.75rem;
+  outline: none;
+  border: 0;
+  margin: 0.25rem;
+  cursor: pointer;
+  position: relative;
+}
+
+[data-testid='live-preview'] button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: white;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+[data-testid='live-preview'] button:hover:before {
+  opacity: 0.3;
+}
+
+code {
+  font-size: 87.5%;
+  color: #e83e8c;
+  word-wrap: break-word;
+}

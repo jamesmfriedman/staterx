@@ -1,0 +1,74 @@
+---
+name: Typescript
+route: /guides/typescript
+menu: Guides
+---
+
+# Typescript
+
+Typescript is supported without any additional configuration. StateRx relies heavily on type inference and often times you don't have to do anything to support typesafety.
+
+```ts
+import { createValue } from 'staterx';
+
+const myState = createValue(0);
+
+myState.get(); // number
+
+myState.state$.subscribe(val => val); // number
+
+myState.set('test'); // ERROR
+```
+
+## Casting to Type
+
+While Typescript's inference engine is incredibly powerful, the current version of it also ships with a long running *bug*. You can only infer everything or nothing... To get around this with StateRx, instead of passing in a generic type, we cast the initial value to whatever we want.
+
+```ts
+import { createValue } from 'staterx';
+
+// What if we want myState to be a number or a string?
+const myState = createValue(0 as number | string);
+
+myState.get(); // number | string
+
+myState.state$.subscribe(val => val); // number | string
+
+myState.set('test'); // OK
+```
+
+This becomes extra necessary when dealing with `createItems` and `createArray`.
+
+```ts
+import { createArray } from 'staterx';
+
+type Todo = {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+const myState = createArray([] as Todo[]);
+```
+
+```ts
+import { createItems } from 'staterx';
+
+type Todo = {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+const myState = createItems({} as {[id: string]: Todo});
+```
+
+Lastly, DON'T do this!!! Ideally, this is what you would want to do, but for now due to the bug in TS, it won't work.
+
+```ts
+// DON'T DO THIS!
+// While it is perfectly valid Typescript
+// it breaks inference of other generics
+const myState = createArray<Todo>([]);
+// If you did this, you just broke a lot of your typesafety
+```

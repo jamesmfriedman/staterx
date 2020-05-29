@@ -36,7 +36,7 @@ const createReducer = <T>({ constant }: { constant: Constants }) => (
 };
 
 export interface CreateObjectOpts<T, E>
-  extends CreateStateRxOpts<E, StateRxObject<T>> {}
+  extends CreateStateRxOpts<E, StateRxObject<T>, T> {}
 
 export interface StateRxObject<T> extends CreateStateRxApi<T> {
   merge: (data: Partial<T>) => { type: string; data: T };

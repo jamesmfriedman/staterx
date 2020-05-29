@@ -1,0 +1,44 @@
+---
+name: Options
+route: /staterx-api/options
+menu: Api
+---
+
+# Options
+
+All StateRx Objects have a similar api and options
+
+```ts
+createValue(initialValue: any, opts: {
+  /** An optional name for your value. One will be generated for you if not provided. */
+  name?: string;
+  /** Automatically start listening for changes on this branch. Defaults to true. */
+  autoRun?: boolean;
+  /** Declare effects on the StateRx Objects */
+  effects?: (srx: Api) => Effects;
+  /** Optionally declare an additional reducer if you're using Flux style architecture. */
+  reducer?: (state: State, action: AnyAction) => State;
+})
+```
+
+```js
+const value = createValue(0, {
+  name: 'myValue',
+  effects: ({ state$ }) => ({
+    increment: () => value.set(val => val + 1),
+    decrement: () => value.set(val => val - 1)
+  })
+});
+```
+
+When adding your own custom effects, all built in ones are available to your effects function as arguments.
+
+```js
+const value = createValue(0, {
+  name: 'myValue',
+  effects: ({ state$, action$, dispatch, set, get, reset }) => ({
+    increment: () => set(val => val + 1),
+    decrement: () => set(val => val - 1)
+  })
+});
+```

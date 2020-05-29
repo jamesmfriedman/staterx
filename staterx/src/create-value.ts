@@ -6,7 +6,7 @@ import {
 } from './create-staterx';
 
 export interface CreateValueOpts<T, E>
-  extends CreateStateRxOpts<E, StateRxValue<T>> {}
+  extends CreateStateRxOpts<E, StateRxValue<T>, T> {}
 
 export interface StateRxValue<T> extends CreateStateRxApi<T> {}
 

@@ -1,0 +1,154 @@
+---
+name: React
+route: /guides/react,
+menu: Guides
+---
+
+import { Playground } from 'docz';
+import { useRx, useRxMemo } from 'staterx';
+import { counter, todos, colors, ComponentA, ComponentB, SetColors } from './examples';
+
+# React
+
+StateRx has built in React support through hooks. The `useRx` and `useRxMemo` hooks actually work with ANY Observable, not just StateRx Objects. The following example creates a value and consumes both the `state$` and the custom `callCount$` Observable.
+
+First, lets create a StateRx Objects to consume in our React component.
+
+```js
+import { createValue, useRx } from 'staterx';
+import { scan } from 'rxjs/operators';
+
+const counter = createValue(0, {
+  effects: ({ state$ }) => ({
+    // here we create two functions that describe how we want to change our value
+    increment: () => counter.set(val => val + 1),
+    decrement: () => counter.set(val => val - 1),
+    // here we create an observable that can keep count of the total number of
+    // times our counter has changed, regardless of direction
+    callCount$: state$.pipe(scan(acc => acc + 1, -1))
+  })
+});
+```
+## useRx
+
+`useRx` takes two arguments, an Observable and an optional default value. Similar to React's `useState`, it returns an array. The first item in the array is the value, however, the second value is actually an error in the event that our observable has an unrecoverable error.
+
+**Attention** Since Observables don't always have default values, be aware that your state's value might initially be `undefined` on the first render since subscriptions in RxJS are async. Typescript will alert you of this potential issue, but for non Typescript users be aware that passing a default value is always a safe idea.
+
+<Playground>{() => {
+  const [count] = useRx(counter.state$);
+  const [numCalls] = useRx(counter.callCount$, 0); // passing a default value
+  return <>
+    <button onClick={counter.decrement}>
+      - Decrement
+    </button>
+    <button onClick={counter.increment}>
+      + Increment
+    </button>
+    <button onClick={counter.reset}>
+      Reset
+    </button>
+    <ul>
+      <li>Count: {count}</li>
+      <li>Num Calls: {numCalls}</li>
+    </ul>
+  </>  
+}}</Playground>
+
+## useRxMemo
+
+There are plenty of situations where consuming an effect requires passing some parameters to create an Observable. A basic use case is selecting an item by id. For these situations you should use the `useRxMemo` hook. This hook takes a function that returns an Observable, a list of dependencies, and an optional default value.
+
+The example below uses `createItems` to create a list of todos. `createItems` comes with a bunch of useful built in effects, in this case we're going to use the `byId` effect. The example below is editable, you can modify the id and `useRxMemo` will respond accordingly.
+
+```js
+import { creatItems, useRx } from 'staterx';
+
+const todos = createItems({
+  '1': {id: '1', text: 'First Todo', completed: false},
+  '2': {id: '2', text: 'Second Todo', completed: false},
+  '3': {id: '3', text: 'Third Todo', completed: false},
+});
+```
+
+<Playground>{() => {
+  const id = '1';
+  const [todo] = useRxMemo(() => todos.byId(id), [id]);
+  
+  if (!todo) {
+    return <>Todo Not Found</>;
+  }
+  
+  return (
+    <label htmlFor={todo.id}>
+      <input
+        id={todo.id}
+        type="checkbox"
+        value={todo.checked}
+        onChange={(evt) => todos.merge({
+          ...todo,
+          completed: evt.currentTarget.checked
+        })}
+      />
+      {todo.text}
+    </label>
+  )
+}}</Playground>
+
+## Cross Component Communication
+
+There are many different ways to share state between components such as Context, Providers, Lifted State, Global Stores. StateRx makes this behavior dummy proof. As long as you are using the `useRx` hook, it just *works*. 
+
+Here is a contrived example. We have three components, we can use the set method of our StateRx Objects to update the value, and two other components can respond accordingly. To make the example a little more dynamic, we've added a delay to the second observable so ComponentB will change color slightly after ComponentA.
+
+Components do not have to be parents, children, siblings, or even in the same files. They will re-render whenever the Observable emits a new value.
+
+```js
+import { useRx, useRxMemo } from 'staterx';
+import { delay } from 'rxjs/operators';
+
+const colors = createValue('red');
+
+export function ComponentA() {
+  const [backgroundColor] = useRx(colors.state$);
+  return (
+    <div
+      className="colorExample"
+      style={{
+        backgroundColor
+      }}
+    >
+      A
+    </div>
+  );
+}
+
+export function ComponentB() {
+  const [backgroundColor] = useRxMemo(() => colors.state$.pipe(delay(500)), []);
+  return (
+    <div
+      className="colorExample"
+      style={{
+        backgroundColor
+      }}
+    >
+      B
+    </div>
+  );
+}
+
+export function SetColors() {
+  return (
+    <>
+      <button onClick={() => colors.set('red')}>Make it Red</button>
+      <button onClick={() => colors.set('blue')}>Make it Blue</button>
+    </>
+  );
+}
+```
+
+<Playground>
+  <SetColors />
+  <ComponentA />
+  <ComponentB />
+</Playground>

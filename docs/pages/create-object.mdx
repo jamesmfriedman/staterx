@@ -1,0 +1,71 @@
+---
+name: createObject
+route: /staterx-api/create-object
+menu: Api
+---
+
+# createObject
+
+Creates an observable object.
+
+```js
+createObject(initialValue: Object, opts: DefaultOptions})
+```
+
+```js
+const myState = createObject({
+  hello: 'foo',
+  world: 'baz'
+});
+```
+
+## get
+
+Returns the current object.
+
+```js
+myState.get(); // returns { hello: 'foo', world: 'baz' }
+```
+
+## set
+
+Sets object.
+
+```js
+myState.set({
+  hello: '1',
+  world: '2',
+});
+```
+
+## reset
+
+Reset to initial value.
+
+```js
+myState.reset();
+```
+
+## merge
+
+Shallowly merge into the object.
+
+```js
+myState.merge({
+  foo: 'baz'
+});
+
+// {
+//   hello: 'foo',
+//   world: 'baz',
+//   foo: 'baz'
+// }
+```
+
+## state$
+
+An Observable of the current object.
+
+```js
+myState.state$.subscribe(val => console.log(val)); // returns { hello: 'foo', world: 'baz' }
+```

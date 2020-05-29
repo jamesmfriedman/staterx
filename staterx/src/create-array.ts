@@ -1,25 +1,28 @@
-import { BehaviorSubject } from 'rxjs';
-import { AnyAction, Constants, Dispatch, getType, ensureArray } from './utils';
+import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  AnyAction,
+  Constants,
+  Dispatch,
+  getType,
+  ensureArray,
+  AnyItem
+} from './utils';
 import {
   CreateStateRxOpts,
   CreateStateRxApi,
   createStateRx
 } from './create-staterx';
+import { map } from 'rxjs/operators';
 
 export interface CreateArrayOpts<T, E>
-  extends CreateStateRxOpts<E, StateRxArray<T>> {}
+  extends CreateStateRxOpts<E, StateRxArray<T>, T[]> {}
 
 export interface Actions<T> {
-  concat: <I extends (T | ConcatArray<T>)[]>(
-    ...data: I
-  ) => { type: string; data: I };
-  map: (
-    callback: (value: T, index: number) => T
-  ) => { type: string; data: T[] };
   pop: () => { type: string };
   push: (...data: T[]) => { type: string; data: T[] };
   reverse: () => { type: string };
   shift: () => { type: string };
+  unshift: (...data: T[]) => { type: string; data: T[] };
   sort: (compareFn?: (a: T, b: T) => number) => { type: string; data: T[] };
   splice: (
     start: number,
@@ -33,6 +36,19 @@ export interface Actions<T> {
 
 export interface StateRxArray<T> extends CreateStateRxApi<T[]>, Actions<T> {}
 
+const createSelectors = <T extends AnyItem, S extends any[]>(
+  state$: Observable<S>
+) => {
+  const byIndex = (idx: number) => state$.pipe(map((state) => state[idx]));
+  const slice = (start?: number, end?: number) =>
+    state$.pipe(map((state) => state.slice(start, end)));
+
+  return {
+    byIndex,
+    slice
+  };
+};
+
 const createActions = <T>({
   constant,
   dispatch,
@@ -43,13 +59,11 @@ const createActions = <T>({
   get: () => T[];
 }): Actions<T> => {
   return {
-    concat: (...data) => dispatch({ type: constant.CONCAT, data }),
-    map: (callback) =>
-      dispatch({ type: constant.MAP, data: get().map(callback) }),
     pop: () => dispatch({ type: constant.POP }),
     push: (...data) => dispatch({ type: constant.PUSH, data }),
-    reverse: () => dispatch({ type: constant.REVERSE }),
     shift: () => dispatch({ type: constant.SHIFT }),
+    unshift: (...data) => dispatch({ type: constant.UNSHIFT, data }),
+    reverse: () => dispatch({ type: constant.REVERSE }),
     sort: (compareFn) =>
       dispatch({ type: constant.SORT, data: get().slice().sort(compareFn) }),
     splice: (start, deleteCount, ...items) =>
@@ -71,16 +85,14 @@ const createReducer = ({ constant }: { constant: Constants }) => (
   const type = getType(action);
 
   switch (type) {
-    case constant.CONCAT:
-      return state.concat(...action.data);
-    case constant.MAP:
-      return action.data;
     case constant.POP:
       const popClone = state.slice();
       popClone.pop();
       return popClone;
     case constant.PUSH:
       return [...state, ...action.data];
+    case constant.UNSHIFT:
+      return [...action.data, ...state];
     case constant.REVERSE:
       return state.slice().reverse();
     case constant.SHIFT:
@@ -108,16 +120,8 @@ export const createArray = <T, E>(
 ) =>
   createStateRx(initialState, options, {
     state$: new BehaviorSubject<T[]>(initialState),
-    constants: [
-      'CONCAT',
-      'MAP',
-      'POP',
-      'PUSH',
-      'REVERSE',
-      'SHIFT',
-      'SORT',
-      'SPLICE'
-    ],
+    constants: ['POP', 'PUSH', 'REVERSE', 'SHIFT', 'SORT', 'SPLICE'],
     createActions,
-    createReducer
+    createReducer,
+    createSelectors
   });

@@ -1,0 +1,49 @@
+---
+name: createValue
+route: /staterx-api/create-value
+menu: Api
+---
+
+# createObject
+
+Creates an observable value.
+
+```js
+createValue(initialValue: any, opts: DefaultOptions})
+```
+
+```js
+const myState = createValue(0);
+```
+
+## get
+
+Returns the current value.
+
+```js
+myState.get(); // returns 0
+```
+
+## set
+
+Sets a new value.
+
+```js
+myState.set(1);
+```
+
+## reset
+
+Reset to initial value.
+
+```js
+myState.reset();
+```
+
+## state$
+
+An Observable of the current value.
+
+```js
+myState.state$.subscribe(val => console.log(val)); // returns 0
+```

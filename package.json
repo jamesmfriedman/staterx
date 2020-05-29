@@ -4,6 +4,7 @@
   "description": "State management with RxJS",
   "scripts": {
     "docs": "cd docs && npm run dev",
+    "docs:setup": "cd ./docs/ && npm i && npm link ../staterx",
     "hacker-news": "cd examples/hacker-news && npm start",
     "hacker-news:setup": "cd ./examples/hacker-news && npm i && npm link ../../staterx",
     "pong": "cd examples/pong && npm start",
