@@ -2,7 +2,7 @@
   "name": "staterx-hacker-news-clone",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jamesmfriedman.github.io/staterx/hacker-news",
+  "homepage": "https://jamesmfriedman.github.io/staterx/hacker-news/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
