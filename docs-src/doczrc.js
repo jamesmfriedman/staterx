@@ -24,12 +24,6 @@ export default {
         'createStore'
       ]
     },
-    {
-      name: 'Examples',
-      menu: [
-        { name: 'HackerNews Clone', href: 'https://github.com/' },
-        { name: 'Pong', href: 'https://github.com/' }
-      ]
-    }
+    'Examples'
   ]
 };
