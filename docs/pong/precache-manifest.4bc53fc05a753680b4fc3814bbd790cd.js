@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "5c325f1dceb05ee1328d3b493e46eb26",
+    "revision": "d721f54e0722f74f2e2651386ca8f5db",
     "url": "/staterx/pong/index.html"
   },
   {
-    "revision": "99541b655c4209b4a8f1",
+    "revision": "9d48efe0bd70bad7b2d9",
     "url": "/staterx/pong/static/css/main.e943dbd5.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/staterx/pong/static/js/2.3753c773.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "99541b655c4209b4a8f1",
-    "url": "/staterx/pong/static/js/main.899a8529.chunk.js"
+    "revision": "9d48efe0bd70bad7b2d9",
+    "url": "/staterx/pong/static/js/main.e493b118.chunk.js"
   },
   {
     "revision": "bef31c77ec50a90306c5",
