@@ -3,6 +3,5 @@
 
 StateRx
 -------
+https://jamesmfriedman.github.io/staterx/
 
-- Setup for local dev `npm run dev:setup`
-- Run the hacker-news clone `npm run hacker-news`
