@@ -55,9 +55,13 @@ const counter = createValue(0, {
     // here we create two functions that describe how we want to change our value
     increment: () => counter.set(val => val + 1),
     decrement: () => counter.set(val => val - 1),
-    // here we create an observable that can keep count of the total number of
-    // times our counter has changed, regardless of direction
+    // an observable to count of the total number of times our counter has changed
     callCount$: state$.pipe(scan(acc => acc + 1, -1))
+    // an example of an async effect
+    save: async () => {
+      const myVal = counter.get();
+      await fetch('/example/save/', {...}); // do something async
+    }
   })
 });
 

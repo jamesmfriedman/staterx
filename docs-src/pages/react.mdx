@@ -31,9 +31,9 @@ const counter = createValue(0, {
 ```
 ## useRx
 
-`useRx` takes two arguments, an Observable and an optional default value. Similar to React's `useState`, it returns an array. The first item in the array is the value, however, the second value is actually an error in the event that our observable has an unrecoverable error.
+`useRx` takes two arguments, an Observable and an optional dependencies list for memoization.
 
-**Attention** Since Observables don't always have default values, be aware that your state's value might initially be `undefined` on the first render since subscriptions in RxJS are async. Typescript will alert you of this potential issue, but for non Typescript users be aware that passing a default value is always a safe idea.
+**Attention** Since Observables don't always have default values, be aware that your state's value might initially be `undefined` on the first render since subscriptions in RxJS are async. Typescript will alert you of this potential issue, but for non Typescript users be aware that having a default value fallback is always a safe idea.
 
 <Playground>{() => {
   const count = useRx(counter.state$);
