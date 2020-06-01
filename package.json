@@ -9,7 +9,7 @@
     "lib:build": "cd lib && npm run build",
     "docs": "cd docs-src && npm run dev",
     "docs:setup": "cd ./docs-src && npm i && npm link ../lib",
-    "docs:build": "cd ./docs-src && npm run build && yes | cp -rf .docz/dist ../docs",
+    "docs:build": "rm -rf docs && cd ./docs-src && npm run build && yes | cp -rf .docz/dist ../docs",
     "hacker-news": "cd examples/hacker-news && npm start",
     "hacker-news:setup": "cd ./examples/hacker-news && npm i && npm link ../../lib",
     "hacker-news:build": "cd ./examples/hacker-news && npm run build && yes | cp -rf ./build ../../docs/hacker-news",
