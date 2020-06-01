@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRx } from 'staterx';
-import { ball, initGame, p1, p2 } from './state';
+import { ball, p1, p2 } from './state';
 
 function Game() {
   return (
@@ -14,7 +14,7 @@ function Game() {
 }
 
 function Paddle({ state }: { state: typeof p1 | typeof p2 }) {
-  const [player] = useRx(state.state$);
+  const player = useRx(state.state$);
 
   return (
     <div
@@ -25,7 +25,7 @@ function Paddle({ state }: { state: typeof p1 | typeof p2 }) {
 }
 
 function Ball() {
-  const [ballState] = useRx(ball.state$);
+  const ballState = useRx(ball.state$);
 
   return (
     <div
@@ -36,8 +36,8 @@ function Ball() {
 }
 
 function Score() {
-  const [p1State] = useRx(p1.score$);
-  const [p2State] = useRx(p2.score$);
+  const p1State = useRx(p1.score$);
+  const p2State = useRx(p2.score$);
 
   return (
     <div className="scores">

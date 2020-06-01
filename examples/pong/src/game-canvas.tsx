@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useRx } from 'staterx';
-import { ball, initGame, p1, p2, board } from './state';
+import { ball, p1, p2, board } from './state';
 
 function Game() {
   return (
@@ -54,31 +54,9 @@ function Canvas() {
   return <canvas className="canvas" ref={ref} />;
 }
 
-function Paddle({ state }: { state: typeof p1 | typeof p2 }) {
-  const [player] = useRx(state.state$);
-
-  return (
-    <div
-      className="paddle"
-      style={{ transform: `translate(${player.x}px, ${player.y}px)` }}
-    />
-  );
-}
-
-function Ball() {
-  const [ballState] = useRx(ball.state$);
-
-  return (
-    <div
-      className="ball"
-      style={{ transform: `translate(${ballState.x}px, ${ballState.y}px)` }}
-    />
-  );
-}
-
 function Score() {
-  const [p1State] = useRx(p1.score$);
-  const [p2State] = useRx(p2.score$);
+  const p1State = useRx(p1.score$);
+  const p2State = useRx(p2.score$);
 
   return (
     <div className="scores">

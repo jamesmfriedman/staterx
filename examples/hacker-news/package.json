@@ -48,7 +48,7 @@
     "@types/classnames": "^2.2.10",
     "@types/react-router": "^5.1.7",
     "@types/react-router-dom": "^5.1.5",
-    "react-app-rewired": "^2.1.5",
+    "react-app-rewired": "^2.1.6",
     "react-hot-loader": "^4.12.20",
     "typescript": "^3.8.3"
   }

@@ -69,6 +69,7 @@ const addBabelPlugin = (plugin) => (config) => {
 const addAliases = (config) => {
   config.resolve.alias = {
     ...(config.resolve.alias || {}),
+    react: path.resolve('./node_modules/react'),
     '@src': path.resolve('./', 'src'),
     '@vendor': path.resolve('./', 'src/vendor'),
     '@common': path.resolve('./', 'src/common'),

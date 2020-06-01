@@ -63,6 +63,22 @@ type Todo = {
 const myState = createItems({} as {[id: string]: Todo});
 ```
 
+Alternatively, you can just declare your initial state with a type.
+
+```ts
+import { createArray } from 'staterx';
+
+type Todo = {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+const initialState: Todo[] = [];
+
+const myState = createArray(initialState);
+```
+
 Lastly, DON'T do this!!! Ideally, this is what you would want to do, but for now due to the bug in TS, it won't work.
 
 ```ts

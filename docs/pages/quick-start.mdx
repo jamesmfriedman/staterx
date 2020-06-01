@@ -78,8 +78,8 @@ import { createValue, useRx } from 'staterx';
 ```
 
 <Playground>{() => {
-  const [count] = useRx(counter.state$);
-  const [numCalls] = useRx(counter.callCount$);
+  const count = useRx(counter.state$);
+  const numCalls = useRx(counter.callCount$);
   return <>
     <button onClick={counter.decrement}>
       - Decrement

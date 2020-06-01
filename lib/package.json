@@ -1,0 +1,33 @@
+{
+  "name": "staterx",
+  "version": "0.0.0",
+  "description": "State management with RxJS",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "coverage": "jest --coverage"
+  },
+  "author": "James M. Friedman",
+  "license": "ISC",
+  "peerDependencies": {
+    "rxjs": "^6.x.x",
+    "react": "^16.8.x"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.10.1",
+    "@testing-library/react": "^10.0.4",
+    "@testing-library/react-hooks": "^3.2.1",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.6",
+    "@types/react": "^16.9.35",
+    "jest": "^26.0.1",
+    "react": "^16.13.1",
+    "react-test-renderer": "^16.13.1",
+    "rxjs": "^6.5.5",
+    "ts-jest": "^26.0.0",
+    "typescript": "^3.8.3"
+  }
+}

@@ -1,7 +1,7 @@
 import { zip, from } from 'rxjs';
-import { map, mergeMap, finalize, scan } from 'rxjs/operators';
+import { map, mergeMap, finalize } from 'rxjs/operators';
 import { object, list } from 'rxfire/database';
-import { createItems, createValue, createArray } from 'staterx';
+import { createItems } from 'staterx';
 import { db } from '@state/firebase';
 import { rawDomain } from '@src/common/raw-domain';
 
@@ -112,7 +112,7 @@ export const storyState = createItems({} as { [id: string]: StoryT }, {
     title: '',
     type: 'story'
   },
-  effects: ({ all$, reset, merge, create }) => {
+  effects: ({ all$, reset, update, create }) => {
     /** Get all items sorted properly for the feed */
     const sorted$ = all$.pipe((items) =>
       items.pipe(map((items) => [...items].sort((a, b) => a.order - b.order)))
@@ -158,7 +158,7 @@ export const storyState = createItems({} as { [id: string]: StoryT }, {
             return story;
           })
         )
-        .subscribe((stories) => merge(stories));
+        .subscribe((stories) => update(stories));
 
       return consumer$.pipe(finalize(() => creatorSub.unsubscribe()));
     };
@@ -171,17 +171,3 @@ export const storyState = createItems({} as { [id: string]: StoryT }, {
     };
   }
 });
-
-const counter = createValue(0, {
-  name: 'My Counter',
-  effects: ({ set, state$ }) => ({
-    increment: () => set((val) => val + 1),
-    decrement: () => set((val) => val - 1),
-    allTimeCallCount$: state$.pipe(scan((acc) => acc + 1, 0))
-  })
-});
-
-const arr = createArray([] as number[]);
-arr.state$.subscribe(console.warn);
-arr.push(1);
-arr.pop();

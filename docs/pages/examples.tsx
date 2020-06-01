@@ -1,6 +1,6 @@
 import React from 'react';
 import { delay } from 'rxjs/operators';
-import { useRx, useRxMemo } from 'staterx';
+import { useRx } from 'staterx';
 import { createValue, createItems } from 'staterx';
 import { scan } from 'rxjs/operators';
 
@@ -24,7 +24,7 @@ export const todos = createItems({
 export const colors = createValue('red' as 'red' | 'blue');
 
 export function ComponentA() {
-  const [backgroundColor] = useRx(colors.state$);
+  const backgroundColor = useRx(colors.state$);
   return (
     <div
       className="colorExample"
@@ -38,7 +38,7 @@ export function ComponentA() {
 }
 
 export function ComponentB() {
-  const [backgroundColor] = useRxMemo(() => colors.state$.pipe(delay(500)), []);
+  const backgroundColor = useRx(() => colors.state$.pipe(delay(500)));
   return (
     <div
       className="colorExample"

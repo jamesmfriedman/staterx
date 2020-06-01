@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "description": "State management with RxJS",
   "scripts": {
+    "dev:setup": "cd lib && npm i && npm run build && cd ../ && npm run docs:setup && npm run hacker-news:setup && npm run pong:setup",
+    "build:all": "npm run lib:build && npm run docs:build && npm run pong:build && npm run hacker-news:build",
+    "lib:build": "cd lib && npm run build",
     "docs": "cd docs && npm run dev",
-    "docs:setup": "cd ./docs/ && npm i && npm link ../staterx",
+    "docs:setup": "cd ./docs/ && npm i && npm link ../lib",
+    "docs:build": "cd ./docs && npm run build",
     "hacker-news": "cd examples/hacker-news && npm start",
-    "hacker-news:setup": "cd ./examples/hacker-news && npm i && npm link ../../staterx",
+    "hacker-news:setup": "cd ./examples/hacker-news && npm i && npm link ../../lib",
+    "hacker-news:build": "cd ./examples/hacker-news && npm run build",
     "pong": "cd examples/pong && npm start",
-    "pong:setup": "cd ./examples/pong && npm i && npm link ../../staterx",
-    "dev:setup": "cd staterx && npm i && npm run build && cd ../docs && npm i"
+    "pong:setup": "cd ./examples/pong && npm i && npm link ../../lib",
+    "pong:build": "cd ./examples/pong && npm run build"
   },
   "author": "James M. Friedman",
   "license": "ISC"

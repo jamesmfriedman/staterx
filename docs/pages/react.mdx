@@ -5,12 +5,12 @@ menu: Guides
 ---
 
 import { Playground } from 'docz';
-import { useRx, useRxMemo } from 'staterx';
+import { useRx } from 'staterx';
 import { counter, todos, colors, ComponentA, ComponentB, SetColors } from './examples';
 
 # React
 
-StateRx has built in React support through hooks. The `useRx` and `useRxMemo` hooks actually work with ANY Observable, not just StateRx Objects. The following example creates a value and consumes both the `state$` and the custom `callCount$` Observable.
+StateRx has built in React support through hooks. The `useRx` hook actually work with ANY Observable, not just StateRx Objects. The following example creates a value and consumes both the `state$` and the custom `callCount$` Observable.
 
 First, lets create a StateRx Objects to consume in our React component.
 
@@ -36,8 +36,8 @@ const counter = createValue(0, {
 **Attention** Since Observables don't always have default values, be aware that your state's value might initially be `undefined` on the first render since subscriptions in RxJS are async. Typescript will alert you of this potential issue, but for non Typescript users be aware that passing a default value is always a safe idea.
 
 <Playground>{() => {
-  const [count] = useRx(counter.state$);
-  const [numCalls] = useRx(counter.callCount$, 0); // passing a default value
+  const count = useRx(counter.state$);
+  const numCalls = useRx(counter.callCount$);
   return <>
     <button onClick={counter.decrement}>
       - Decrement
@@ -55,11 +55,11 @@ const counter = createValue(0, {
   </>  
 }}</Playground>
 
-## useRxMemo
+## Memoization and Observable Factories
 
-There are plenty of situations where consuming an effect requires passing some parameters to create an Observable. A basic use case is selecting an item by id. For these situations you should use the `useRxMemo` hook. This hook takes a function that returns an Observable, a list of dependencies, and an optional default value.
+There are plenty of situations where consuming an effect requires passing some parameters to create an Observable. A basic use case is selecting an item by id. For these situations the `useRx` hook can handle memoization. Just pass a function that returns an Observable and a list of dependencies.
 
-The example below uses `createItems` to create a list of todos. `createItems` comes with a bunch of useful built in effects, in this case we're going to use the `byId` effect. The example below is editable, you can modify the id and `useRxMemo` will respond accordingly.
+The example below uses `createItems` to create a list of todos. `createItems` comes with a bunch of useful built in effects, in this case we're going to use the `byId` effect. The example below is editable, you can modify the id and `useRx` will respond accordingly.
 
 ```js
 import { creatItems, useRx } from 'staterx';
@@ -73,7 +73,7 @@ const todos = createItems({
 
 <Playground>{() => {
   const id = '1';
-  const [todo] = useRxMemo(() => todos.byId(id), [id]);
+  const todo = useRx(() => todos.byId(id), [id]);
   
   if (!todo) {
     return <>Todo Not Found</>;
@@ -104,13 +104,13 @@ Here is a contrived example. We have three components, we can use the set method
 Components do not have to be parents, children, siblings, or even in the same files. They will re-render whenever the Observable emits a new value.
 
 ```js
-import { useRx, useRxMemo } from 'staterx';
+import { useRx } from 'staterx';
 import { delay } from 'rxjs/operators';
 
 const colors = createValue('red');
 
 export function ComponentA() {
-  const [backgroundColor] = useRx(colors.state$);
+  const backgroundColor = useRx(colors.state$);
   return (
     <div
       className="colorExample"
@@ -124,7 +124,7 @@ export function ComponentA() {
 }
 
 export function ComponentB() {
-  const [backgroundColor] = useRxMemo(() => colors.state$.pipe(delay(500)), []);
+  const backgroundColor = useRx(() => colors.state$.pipe(delay(500)));
   return (
     <div
       className="colorExample"
