@@ -62,10 +62,10 @@ One of the main differences between StateRx and a typical Flux architecture is t
 
 `createStore` takes an object of strings pointing to either StateRx Objects or plain Observables.
 
-> StateRx has alpha support for Redux Dev Tools so you can inspect your current state and view changes over time. Just install the Chrome Redux Dev Tools extension and then use `connectDevTools`.
+> StateRx has alpha support for Redux Dev Tools so you can inspect your current state and view changes over time. Just install the Chrome Redux Dev Tools extension and then use `connectReduxDevTools`.
 
 ```js
-import { createStore, createValue, connectDevTools } from 'staterx';
+import { createStore, createValue, connectReduxDevTools } from 'staterx';
 
 // You can optionally pass a name to identify your StateRx
 // Object. If not, a name will be generated for you.
@@ -78,7 +78,7 @@ const store = createStore({
 });
 
 // optionally connect redux-dev-tools
-connectDevTools(store);
+connectReduxDevTools(store);
 
 // you can subscribe to all store actions
 store.action$.subscribe(action => console.log(action));

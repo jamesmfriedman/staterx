@@ -1,6 +1,6 @@
 import { storyState } from './story';
 import { userState } from './user';
-import { createStore, connectDevTools } from 'staterx';
+import { createStore, connectReduxDevTools } from 'staterx';
 export * from './story';
 
 export const store = createStore({
@@ -8,6 +8,6 @@ export const store = createStore({
   [userState.name]: userState
 });
 
-connectDevTools(store);
+connectReduxDevTools(store);
 
 store.action$.subscribe((val: any) => console.log('store', val));

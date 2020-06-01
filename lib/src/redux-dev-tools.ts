@@ -24,12 +24,13 @@ interface DevTools {
   error: (message: any) => void;
 }
 
-export const connectDevTools = (store: ReturnType<typeof createStore>) => {
+export const connectReduxDevTools = (store: ReturnType<typeof createStore>) => {
   const extension: DevToolsExtension =
     typeof window !== undefined && (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
   if (!extension) {
     console.error('No Redux Dev Tools extension detected');
+    return;
   }
 
   const dev = extension.connect({ name: 'StateRx' });
