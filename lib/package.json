@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "description": "State management with RxJS",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamesmfriedman/staterx/"
+  },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
