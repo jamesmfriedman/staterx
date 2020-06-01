@@ -1,6 +1,7 @@
 import { css } from 'docz-plugin-css';
 
 export default {
+  base: '/staterx',
   typescript: true,
   plugins: [
     css({

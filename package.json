@@ -2,6 +2,7 @@
   "name": "staterx-main",
   "version": "0.0.0",
   "description": "State management with RxJS",
+  "homepage": "https://jamesmfriedman.github.io/staterx/",
   "scripts": {
     "dev:setup": "cd lib && npm i && npm run build && cd ../ && npm run docs:setup && npm run hacker-news:setup && npm run pong:setup",
     "build:all": "npm run lib:build && npm run docs:build && npm run pong:build && npm run hacker-news:build",
