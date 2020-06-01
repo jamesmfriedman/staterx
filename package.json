@@ -11,10 +11,10 @@
     "docs:build": "cd ./docs-src && npm run build && yes | cp -rf .docz/dist ../docs",
     "hacker-news": "cd examples/hacker-news && npm start",
     "hacker-news:setup": "cd ./examples/hacker-news && npm i && npm link ../../lib",
-    "hacker-news:build": "cd ./examples/hacker-news && npm run build",
+    "hacker-news:build": "cd ./examples/hacker-news && npm run build && yes | cp -rf ./build ../../docs/hacker-news",
     "pong": "cd examples/pong && npm start",
     "pong:setup": "cd ./examples/pong && npm i && npm link ../../lib",
-    "pong:build": "cd ./examples/pong && npm run build"
+    "pong:build": "cd ./examples/pong && npm run build && yes | cp -rf ./build ../../docs/pong"
   },
   "author": "James M. Friedman",
   "license": "ISC"
