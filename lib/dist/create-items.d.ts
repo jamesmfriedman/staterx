@@ -9,6 +9,7 @@ declare type ItemsT<T> = Partial<T> | Array<Partial<T>>;
  * Item State
  *******************************************************/
 export interface CreateItemOpts<T, S, E> extends CreateStateRxOpts<E, StateRxItems<T, S>, S> {
+    default?: S;
     /** A default item to shallowly merge into newly created items. */
     defaultItem?: Partial<T> | (() => Partial<T>);
     /** A custom method for generating IDs for new items. */
@@ -26,5 +27,5 @@ export interface StateRxItems<T, S> extends CreateStateRxApi<S> {
         [key: string]: T[] | undefined;
     }>;
 }
-export declare const createItems: <T extends AnyItem, E>(initialState: ItemState<T>, options?: CreateItemOpts<T, ItemState<T>, E>) => StateRxItems<T, ItemState<T>> & import("./create-staterx").CloneApi<ItemState<T>, StateRxItems<T, ItemState<T>>, E> & E;
+export declare const createItems: <T extends AnyItem, E>(options?: CreateItemOpts<T, ItemState<T>, E>) => StateRxItems<T, ItemState<T>> & import("./create-staterx").CloneApi<ItemState<T>, StateRxItems<T, ItemState<T>>, E> & E;
 export {};

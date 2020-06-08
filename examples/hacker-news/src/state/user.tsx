@@ -15,8 +15,9 @@ export type UserT = {
   submitted: number[];
 };
 
-const branch = createItems({} as { [id: string]: UserT }, {
-  name: 'user'
+const branch = createItems({
+  key: 'user',
+  default: {} as { [id: string]: UserT }
 });
 
 export const userState = {

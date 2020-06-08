@@ -11,7 +11,7 @@ Typescript is supported without any additional configuration. StateRx relies hea
 ```ts
 import { createValue } from 'staterx';
 
-const myState = createValue(0);
+const myState = createValue({default: 0});
 
 myState.get(); // number
 
@@ -28,7 +28,7 @@ While Typescript's inference engine is incredibly powerful, the current version 
 import { createValue } from 'staterx';
 
 // What if we want myState to be a number or a string?
-const myState = createValue(0 as number | string);
+const myState = createValue({default: 0 as number | string});
 
 myState.get(); // number | string
 
@@ -48,7 +48,7 @@ type Todo = {
   completed: boolean;
 }
 
-const myState = createArray([] as Todo[]);
+const myState = createArray({default: [] as Todo[]});
 ```
 
 ```ts
@@ -60,7 +60,7 @@ type Todo = {
   completed: boolean;
 }
 
-const myState = createItems({} as {[id: string]: Todo});
+const myState = createItems({default: {} as {[id: string]: Todo}});
 ```
 
 Alternatively, you can just declare your initial state with a type.
@@ -76,7 +76,7 @@ type Todo = {
 
 const initialState: Todo[] = [];
 
-const myState = createArray(initialState);
+const myState = createArray({default: initialState});
 ```
 
 Lastly, DON'T do this!!! Ideally, this is what you would want to do, but for now due to the bug in TS, it won't work.
@@ -85,6 +85,6 @@ Lastly, DON'T do this!!! Ideally, this is what you would want to do, but for now
 // DON'T DO THIS!
 // While it is perfectly valid Typescript
 // it breaks inference of other generics
-const myState = createArray<Todo>([]);
+const myState = createArray<Todo>({default: []});
 // If you did this, you just broke a lot of your typesafety
 ```

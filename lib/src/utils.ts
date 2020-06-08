@@ -39,15 +39,15 @@ export const defaultGenId = (): string => {
 export const ensureArray = <T>(items: any): T[] =>
   Array.isArray(items) ? items : [items];
 
-export const createConstant = (name: string, constant: string) =>
-  `${name}/${constant}`;
+export const createConstant = (key: string, constant: string) =>
+  `${key}/${constant}`;
 
 export const createConstants = <C extends string>(
-  name: string,
+  key: string,
   constants: C[]
 ) =>
   constants.reduce<{ [key in C]: string }>((acc, constant) => {
-    acc[constant] = createConstant(name, constant);
+    acc[constant] = createConstant(key, constant);
     return acc;
   }, {} as any);
 

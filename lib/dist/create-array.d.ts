@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { CreateStateRxOpts, CreateStateRxApi } from './create-staterx';
 export interface CreateArrayOpts<T, E> extends CreateStateRxOpts<E, StateRxArray<T>, T[]> {
+    default?: T[];
 }
 export interface Actions<T> {
     pop: () => {
@@ -39,4 +40,4 @@ export interface Selectors<T> {
 }
 export interface StateRxArray<T> extends CreateStateRxApi<T[]>, Actions<T>, Selectors<T> {
 }
-export declare const createArray: <T, E>(initialState: T[], options?: CreateArrayOpts<T, E>) => StateRxArray<T> & import("./create-staterx").CloneApi<T[], StateRxArray<T>, E> & E;
+export declare const createArray: <T, E>(options?: CreateArrayOpts<T, E>) => StateRxArray<T> & import("./create-staterx").CloneApi<T[], StateRxArray<T>, E> & E;

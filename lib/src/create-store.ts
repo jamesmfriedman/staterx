@@ -4,7 +4,7 @@ import { AnyAction, wrapDispatchSubject } from './utils';
 
 type GenericInputT = Observable<any> | Subject<any>;
 type StateRxInputT = {
-  name: string;
+  key: string;
   _dispatchers$: Subject<Subject<AnyAction<any>>>;
   state$: Subject<any>;
   action$: Observable<any>;
@@ -65,7 +65,7 @@ export const createStore = (
         obs.next(newValue);
       } else {
         console.warn(
-          `Cannot set store value of ${key}. It is not a StateRx Objects or subject.`
+          `Cannot set store value of ${key}. It is not a StateRx Object or subject.`
         );
       }
     }

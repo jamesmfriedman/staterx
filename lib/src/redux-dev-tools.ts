@@ -26,7 +26,8 @@ interface DevTools {
 
 export const connectReduxDevTools = (store: ReturnType<typeof createStore>) => {
   const extension: DevToolsExtension =
-    typeof window !== undefined && (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+    typeof window !== 'undefined' &&
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
   if (!extension) {
     console.error('No Redux Dev Tools extension detected');

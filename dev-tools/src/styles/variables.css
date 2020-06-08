@@ -1,0 +1,40 @@
+:root {
+  /****************************************
+   * Theme
+   ****************************************/
+  --theme-primary-rgb: 216, 27, 96;
+  --theme-primary: #d81b60;
+  --theme-on-primary: #fff;
+
+  --theme-secondary-rgb: 0, 0, 0;
+  --theme-secondary: black;
+  --theme-on-secondary: #fff;
+
+  --theme-surface: #fff;
+  --theme-surface-highlight: rgba(0, 0, 0, 0.1);
+
+  --theme-background: #f2f3f5;
+
+  --theme-border: rgba(0, 0, 0, 0.1);
+
+  --theme-border-radius: 0.25rem;
+
+  --theme-text-rgb: 0, 0, 0;
+  --theme-text-default: rgba(var(--theme-text-rgb), 0.93);
+  --theme-text-secondary: rgba(var(--theme-text-rgb), 0.65);
+  --theme-text-hint: rgba(var(--theme-text-rgb), 0.38);
+  --theme-text-disabled: rgba(var(--theme-text-rgb), 0.25);
+
+  --theme-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --theme-background: #242424;
+    --theme-text-rgb: 255, 255, 255;
+    --theme-surface: #333333;
+    --theme-border: #3d3d3d;
+  }
+}

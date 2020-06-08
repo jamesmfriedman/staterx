@@ -1,0 +1,42 @@
+.item {
+  padding: 0.5rem 1rem;
+  position: relative;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.item:before {
+  content: '';
+  background: currentColor;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: 0.2s;
+}
+
+.item:hover:before {
+  opacity: 0.05;
+}
+
+.itemActive {
+  background: var(--theme-secondary);
+  color: var(--theme-on-secondary);
+}
+
+.list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

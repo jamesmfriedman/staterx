@@ -36,18 +36,19 @@ const createReducer = <T>({ constant }: { constant: Constants }) => (
 };
 
 export interface CreateObjectOpts<T, E>
-  extends CreateStateRxOpts<E, StateRxObject<T>, T> {}
+  extends CreateStateRxOpts<E, StateRxObject<T>, T> {
+  default?: T;
+}
 
 export interface StateRxObject<T> extends CreateStateRxApi<T> {
   merge: (data: Partial<T>) => { type: string; data: T };
 }
 
 export const createObject = <T extends {}, E>(
-  initialState: T,
   options: CreateObjectOpts<T, E> = {}
 ) =>
-  createStateRx(initialState, options, {
-    state$: new BehaviorSubject<T>(initialState),
+  createStateRx(options, {
+    state$: new BehaviorSubject<T>(options.default || ({} as T)),
     constants: ['MERGE'],
     createActions,
     createReducer

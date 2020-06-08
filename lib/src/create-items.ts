@@ -142,9 +142,13 @@ const createSelectors = <T extends AnyItem, S>(
  * Reducer
  *******************************************************/
 const createReducer = <T extends AnyItem>({
-  constant
+  constant,
+  generateId,
+  defaultItem
 }: {
   constant: Constants;
+  generateId: () => string;
+  defaultItem: Partial<T> | (() => Partial<T>);
 }) => (state: any, action: AnyAction) => {
   const items = ensureArray<T>('items' in action ? action.items : []);
   const type = getType(action);
@@ -168,8 +172,13 @@ const createReducer = <T extends AnyItem>({
     case constant.UPDATE:
       const newUpdatedItems = (items as T[]).reduce<{ [id: string]: T }>(
         (acc, item) => {
+          const existing = state[item.id] || {
+            id: generateId(),
+            ...(typeof defaultItem === 'function' ? defaultItem() : defaultItem)
+          };
+
           acc[item.id] = {
-            ...state[item.id],
+            ...existing,
             ...item
           };
           return acc;
@@ -211,6 +220,7 @@ const createReducer = <T extends AnyItem>({
  *******************************************************/
 export interface CreateItemOpts<T, S, E>
   extends CreateStateRxOpts<E, StateRxItems<T, S>, S> {
+  default?: S;
   /** A default item to shallowly merge into newly created items. */
   defaultItem?: Partial<T> | (() => Partial<T>);
   /** A custom method for generating IDs for new items. */
@@ -233,17 +243,21 @@ export interface StateRxItems<T, S> extends CreateStateRxApi<S> {
 }
 
 export const createItems = <T extends AnyItem, E>(
-  initialState: ItemState<T>,
   options: CreateItemOpts<T, ItemState<T>, E> = {}
 ) => {
   const { generateId = defaultGenId, defaultItem = {} } = options;
 
-  return createStateRx(initialState, options, {
-    state$: new BehaviorSubject<ItemState<T>>(initialState),
+  return createStateRx(options, {
+    state$: new BehaviorSubject<ItemState<T>>(options.default || {}),
     constants: ['CREATE', 'REPLACE', 'REMOVE', 'UPDATE'],
     createActions: (props) =>
       createActions({ ...props, generateId, defaultItem }),
-    createReducer,
+    createReducer: (params) =>
+      createReducer({
+        ...params,
+        generateId,
+        defaultItem
+      }),
     createSelectors
   });
 };

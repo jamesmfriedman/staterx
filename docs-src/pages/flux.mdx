@@ -14,7 +14,7 @@ A dispatch function and an observable of actions is available on every State Obj
 
 ```js
 import { createValue } from 'staterx';
-const myValue = createValue(0);
+const myValue = createValue({default: 0});
 
 myValue.action$.subscribe(action => console.log(action));
 myValue.dispatch({ type: 'helloWorld' }); // logs {type: 'helloWorld'}
@@ -24,7 +24,8 @@ If you're used to the actionCreator pattern, you can use effects to write your o
 
 ```js
 import { createValue } from 'staterx';
-const myValue = createValue(0, {
+const myValue = createValue({
+  default: 0,
   effects: ({ dispatch }) => ({
     hellWorld: () => dispatch({ type: 'helloWorld' })
   })
@@ -39,7 +40,8 @@ myValue.helloWorld(); // logs {type: 'helloWorld'}
 You can extend the built in reducer functionality with a reducer of your own. These are executed after any of the built in reducers.
 
 ```js
-const myValue = createValue(0, {
+const myValue = createValue({
+  default: 0,
   reducer: (state, action) => {
     switch (action.type) {
       case 'increment':
@@ -69,12 +71,12 @@ import { createStore, createValue, connectReduxDevTools } from 'staterx';
 
 // You can optionally pass a name to identify your StateRx
 // Object. If not, a name will be generated for you.
-const myValue = createValue(0, { name: 'myValue' });
-const anotherValue = createValue('Hello', { name: 'anotherValue' });
+const myValue = createValue({ key: 'myValue', default: 0 });
+const anotherValue = createValue({ key: 'anotherValue', default: 'Hello' });
 
 const store = createStore({
-  [myValue.name]: myValue,
-  [anotherValue.name]: anoterValue
+  [myValue.key]: myValue,
+  [anotherValue.key]: anoterValue
 });
 
 // optionally connect redux-dev-tools

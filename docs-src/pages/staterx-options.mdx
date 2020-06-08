@@ -9,9 +9,11 @@ menu: Api
 All StateRx Objects have a similar api and options
 
 ```ts
-createValue(initialValue: any, opts: {
-  /** An optional name for your value. One will be generated for you if not provided. */
-  name?: string;
+createValue(opts: {
+  /** An optional default value for your StateRx Object. */
+  default?: any, 
+  /** An optional name for your value. One will be generated for you if not provided. Useful when using devtools. */
+  key?: string;
   /** Automatically start listening for changes on this branch. Defaults to true. */
   autoRun?: boolean;
   /** Declare effects on the StateRx Objects */
@@ -22,8 +24,9 @@ createValue(initialValue: any, opts: {
 ```
 
 ```js
-const value = createValue(0, {
-  name: 'myValue',
+const value = createValue({
+  key: 'myValue',
+  default: 0,
   effects: ({ state$ }) => ({
     increment: () => value.set(val => val + 1),
     decrement: () => value.set(val => val - 1)
@@ -34,8 +37,9 @@ const value = createValue(0, {
 When adding your own custom effects, all built in ones are available to your effects function as arguments.
 
 ```js
-const value = createValue(0, {
-  name: 'myValue',
+const value = createValue({
+  key: 'myValue',
+  default: 0,
   effects: ({ state$, action$, dispatch, set, get, reset }) => ({
     increment: () => set(val => val + 1),
     decrement: () => set(val => val - 1)

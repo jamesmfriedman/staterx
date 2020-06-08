@@ -8,7 +8,9 @@ import {
 import { map } from 'rxjs/operators';
 
 export interface CreateArrayOpts<T, E>
-  extends CreateStateRxOpts<E, StateRxArray<T>, T[]> {}
+  extends CreateStateRxOpts<E, StateRxArray<T>, T[]> {
+  default?: T[];
+}
 
 export interface Actions<T> {
   pop: () => { type: string };
@@ -115,12 +117,9 @@ const createReducer = ({ constant }: { constant: Constants }) => (
   }
 };
 
-export const createArray = <T, E>(
-  initialState: T[],
-  options: CreateArrayOpts<T, E> = {}
-) =>
-  createStateRx(initialState, options, {
-    state$: new BehaviorSubject<T[]>(initialState),
+export const createArray = <T, E>(options: CreateArrayOpts<T, E> = {}) =>
+  createStateRx(options, {
+    state$: new BehaviorSubject<T[]>(options.default || []),
     constants: ['POP', 'PUSH', 'REVERSE', 'UNSHIFT', 'SHIFT', 'SORT', 'SPLICE'],
     createActions,
     createReducer,

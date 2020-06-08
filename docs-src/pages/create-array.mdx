@@ -11,11 +11,11 @@ Creates an observable array. The methods implemented mi
 > To avoid any confusion with immutable methods like map and reduce, StateRx has only implemented the mutable properties of arrays. Additionally, methods such as pop don't immediately return values. You should subscribe to state$ to get newly emitted values.
 
 ```js
-createArray(initialValue: any[], opts: DefaultOptions);
+createArray(opts: DefaultOptions);
 ```
 
 ```js
-const myState = createArray([1, 2, 3]);
+const myState = createArray({default: [1, 2, 3]});
 ```
 
 ## get

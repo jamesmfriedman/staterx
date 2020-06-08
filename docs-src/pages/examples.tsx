@@ -4,7 +4,9 @@ import { useRx } from 'staterx';
 import { createValue, createItems } from 'staterx';
 import { scan } from 'rxjs/operators';
 
-export const counter = createValue(0, {
+export const counter = createValue({
+  key: 'counter',
+  default: 0,
   effects: ({ state$ }) => ({
     // here we create two functions that describe how we want to change our value
     increment: () => counter.set(val => val + 1),
@@ -16,12 +18,18 @@ export const counter = createValue(0, {
 });
 
 export const todos = createItems({
-  '1': { id: '1', text: 'First Todo', completed: false },
-  '2': { id: '2', text: 'Second Todo', completed: false },
-  '3': { id: '3', text: 'Third Todo', completed: false }
-} as { [id: string]: { id: string; text: string; completed: boolean } });
+  key: 'todos',
+  default: {
+    '1': { id: '1', text: 'First Todo', completed: false },
+    '2': { id: '2', text: 'Second Todo', completed: false },
+    '3': { id: '3', text: 'Third Todo', completed: false }
+  } as { [id: string]: { id: string; text: string; completed: boolean } }
+});
 
-export const colors = createValue('red' as 'red' | 'blue');
+export const colors = createValue({
+  key: 'colors',
+  default: 'red' as 'red' | 'blue'
+});
 
 export function ComponentA() {
   const backgroundColor = useRx(colors.state$);
@@ -59,7 +67,3 @@ export function SetColors() {
     </>
   );
 }
-
-const myVal = createValue(0 as number | string);
-
-myVal.set('foo');

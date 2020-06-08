@@ -9,13 +9,18 @@ menu: Api
 Creates an observable object.
 
 ```js
-createObject(initialValue: Object, opts: DefaultOptions})
+createObject(opts: {
+  ...DefaultOptions,
+  default?: Object
+})
 ```
 
 ```js
 const myState = createObject({
-  hello: 'foo',
-  world: 'baz'
+  default: {
+    hello: 'foo',
+    world: 'baz'
+  }
 });
 ```
 

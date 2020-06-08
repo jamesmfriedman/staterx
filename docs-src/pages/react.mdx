@@ -18,7 +18,8 @@ First, lets create a StateRx Objects to consume in our React component.
 import { createValue, useRx } from 'staterx';
 import { scan } from 'rxjs/operators';
 
-const counter = createValue(0, {
+const counter = createValue({
+  default: 0,
   effects: ({ state$ }) => ({
     // here we create two functions that describe how we want to change our value
     increment: () => counter.set(val => val + 1),
@@ -65,9 +66,11 @@ The example below uses `createItems` to create a list of todos. `createItems` co
 import { creatItems, useRx } from 'staterx';
 
 const todos = createItems({
-  '1': {id: '1', text: 'First Todo', completed: false},
-  '2': {id: '2', text: 'Second Todo', completed: false},
-  '3': {id: '3', text: 'Third Todo', completed: false},
+  default: {
+    '1': {id: '1', text: 'First Todo', completed: false},
+    '2': {id: '2', text: 'Second Todo', completed: false},
+    '3': {id: '3', text: 'Third Todo', completed: false},
+  }
 });
 ```
 
@@ -107,7 +110,7 @@ Components do not have to be parents, children, siblings, or even in the same fi
 import { useRx } from 'staterx';
 import { delay } from 'rxjs/operators';
 
-const colors = createValue('red');
+const colors = createValue({default: 'red'});
 
 export function ComponentA() {
   const backgroundColor = useRx(colors.state$);

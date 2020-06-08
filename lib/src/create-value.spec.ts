@@ -3,34 +3,35 @@ import { Subject } from 'rxjs';
 
 describe('createValue', () => {
   it('with options', () => {
-    const state = createValue(0, {
-      name: 'test',
+    const state = createValue({
+      key: 'test',
+      default: 0,
       autoRun: true,
       effects: () => {},
       reducer: (state) => state
     });
 
-    expect(state.name).toBe('test');
+    expect(state.key).toBe('test');
   });
 
   it('clone', () => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
     expect(state.clone().get()).toBe(0);
-    expect(state.clone(1).get()).toBe(1);
+    expect(state.clone({ default: 1 }).get()).toBe(1);
   });
 
   it('_dispatchers$', () => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
     state._dispatchers$.next(new Subject());
   });
 
   it('get', () => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
     expect(state.get()).toBe(0);
   });
 
   it('set', () => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
 
     // direct set
     state.set(1);
@@ -45,14 +46,14 @@ describe('createValue', () => {
   });
 
   it('reset', () => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
     state.set(1);
     state.reset();
     expect(state.get()).toBe(0);
   });
 
   it('state$', (done) => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
 
     state.state$.subscribe((val) => {
       expect(val).toBe(0);
@@ -61,10 +62,10 @@ describe('createValue', () => {
   });
 
   it('action$', (done) => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
 
     state.action$.subscribe((val) => {
-      expect(val).toEqual({ type: `${state.name}/SET`, data: 1 });
+      expect(val).toEqual({ type: `${state.key}/SET`, data: 1 });
       done();
     });
 
@@ -72,7 +73,7 @@ describe('createValue', () => {
   });
 
   it('dispatch', (done) => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
 
     state.action$.subscribe((val) => {
       expect(val).toEqual({ type: 'test' });
@@ -83,7 +84,8 @@ describe('createValue', () => {
   });
 
   it('custom reducer', (done) => {
-    const state = createValue(0, {
+    const state = createValue({
+      default: 0,
       reducer: (state, action) => {
         switch (action.type) {
           case 'hello':

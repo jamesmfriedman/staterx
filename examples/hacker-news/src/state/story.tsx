@@ -101,8 +101,9 @@ const getStoriesFromAlgolia = (domain: string) => {
   );
 };
 
-export const storyState = createItems({} as { [id: string]: StoryT }, {
-  name: 'story',
+export const storyState = createItems({
+  key: 'story',
+  default: {} as { [id: string]: StoryT },
   defaultItem: {
     by: '',
     kids: [],

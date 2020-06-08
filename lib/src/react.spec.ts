@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 describe('react', () => {
   it('useRx', () => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
 
     // Override the default value and inject our mock _getTime function
     const { result, rerender } = renderHook(() => useRx(state.state$));
@@ -20,7 +20,7 @@ describe('react', () => {
   });
 
   it('useRx error', () => {
-    const state = createValue(0);
+    const state = createValue({ default: 0 });
 
     expect(() =>
       renderHook(() =>

@@ -9,8 +9,9 @@ menu: Api
 Creates a normalized map of items, stored by a primary key.
 
 ```js
-createItems(initialValue: {[id: string]: any}, opts: {
+createItems(opts: {
   ...DefaultOptions,
+  default?: {[id: string]: any}
   /** A default item to shallowly merge into newly created items. */
   defaultItem?: Partial<T>;
   /** A custom method for generating IDs for new items. */
@@ -20,8 +21,10 @@ createItems(initialValue: {[id: string]: any}, opts: {
 
 ```js
 const myState = createItems({
-  '1': { id: '1', text: 'hello' },
-  '2': { id: '2', text: 'world' }
+  default: {
+    '1': { id: '1', text: 'hello' },
+    '2': { id: '2', text: 'world' }
+  }
 });
 ```
 

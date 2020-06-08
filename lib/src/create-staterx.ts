@@ -5,24 +5,24 @@ import {
   createConstants,
   Reducer,
   Constants,
-  Dispatcher,
-  DispatchersList,
   wrapDispatchSubject,
   Dispatch
 } from './utils';
 import { distinctUntilChanged, map, mergeMap } from 'rxjs/operators';
+import { addToRegistry } from './registry';
 
 const DEFAULT_CONSTANTS = ['SET', 'RESET'];
 
 export interface CreateStateRxOpts<E, Api, State> {
-  name?: string;
+  default?: State;
+  key?: string;
   autoRun?: boolean;
   effects?: (srx: Api) => E;
   reducer?: (state: State, action: AnyAction) => State;
 }
 
 export interface CreateStateRxApi<S> {
-  name: string;
+  key: string;
   state$: BehaviorSubject<S>;
   action$: Observable<AnyAction<any>>;
   get: () => S;
@@ -30,10 +30,11 @@ export interface CreateStateRxApi<S> {
   reset: () => { type: string };
   dispatch: <A extends AnyAction>(action: A) => A;
   _dispatchers$: Subject<Subject<AnyAction<any>>>;
+  toJSON: () => string;
 }
 
 export interface CloneApi<State, Api, Effects> {
-  clone: (initialState?: State) => Api & Effects;
+  clone: (options?: CreateStateRxOpts<Effects, Api, State>) => Api & Effects;
 }
 
 type CreateReducer<T, S> = (params: { constant: Constants }) => Reducer<S>;
@@ -111,7 +112,6 @@ export const createStateRx = <
   Selectors extends {},
   Api extends CreateStateRxApi<State>
 >(
-  initialState: State,
   options: CreateStateRxOpts<Effects, Api, State>,
   overrides: {
     state$: BehaviorSubject<State>;
@@ -122,7 +122,8 @@ export const createStateRx = <
   }
 ) => {
   const {
-    name = genRandomString(),
+    default: initialState,
+    key = genRandomString(),
     autoRun = true,
     reducer: userReducer = (state) => state
   } = options;
@@ -135,7 +136,7 @@ export const createStateRx = <
     createSelectors
   } = overrides;
 
-  const constant = createConstants(name, [...DEFAULT_CONSTANTS, ...constants]);
+  const constant = createConstants(key, [...DEFAULT_CONSTANTS, ...constants]);
 
   const get = () => state$.getValue();
 
@@ -154,23 +155,37 @@ export const createStateRx = <
 
   const reducer = createBaseReducer({
     constant,
-    initialState,
+    initialState: initialState as State,
     reducer: createReducer({
       constant
     }),
     userReducer
   });
 
-  const clone = (newInitialState: State = get()) =>
-    createStateRx(newInitialState, options, {
-      ...overrides,
-      state$: new BehaviorSubject<State>(newInitialState)
-    });
+  const clone = (newOptions?: CreateStateRxOpts<Effects, Api, State>) => {
+    const newInitialState =
+      newOptions?.default !== undefined ? newOptions.default : get();
+
+    return createStateRx(
+      {
+        ...options,
+        key: genRandomString(),
+        default: newInitialState,
+        ...newOptions
+      },
+      {
+        ...overrides,
+        state$: new BehaviorSubject<State>(newInitialState)
+      }
+    );
+  };
 
   const _reducer$ = action$.pipe(
     map((action) => reducer(state$.getValue(), action)),
     distinctUntilChanged()
   );
+
+  const toJSON = () => get();
 
   const run = () => _reducer$.subscribe(state$);
 
@@ -178,7 +193,7 @@ export const createStateRx = <
     ...actions,
     ...selectors,
     ...baseActions,
-    name,
+    key,
     state$,
     action$,
     constant,
@@ -186,6 +201,7 @@ export const createStateRx = <
     get,
     clone,
     dispatch,
+    toJSON,
     _reducer$
   } as unknown) as Api & CloneApi<State, Api, Effects>;
 
@@ -193,5 +209,9 @@ export const createStateRx = <
 
   autoRun && run();
 
-  return { ...api, ...effects };
+  const inst = { ...api, ...effects };
+
+  addToRegistry(inst);
+
+  return inst;
 };

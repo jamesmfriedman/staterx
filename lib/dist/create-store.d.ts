@@ -2,7 +2,7 @@ import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { AnyAction } from './utils';
 declare type GenericInputT = Observable<any> | Subject<any>;
 declare type StateRxInputT = {
-    name: string;
+    key: string;
     _dispatchers$: Subject<Subject<AnyAction<any>>>;
     state$: Subject<any>;
     action$: Observable<any>;

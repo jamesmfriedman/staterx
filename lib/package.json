@@ -1,6 +1,6 @@
 {
   "name": "staterx",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "State management with RxJS",
   "main": "dist/index.js",
   "repository": {

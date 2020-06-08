@@ -9,7 +9,7 @@ menu: Api
 Creates an observable centralized store with actions and a dispatcher, similar to Redux or other flux patterns.
 
 ```js
-createStore({[name: string]: Observable | StateRxObject})
+createStore({[key: string]: Observable | StateRxObject})
 ```
 
 ```js
@@ -17,12 +17,12 @@ import { createStore, createValue, connectReduxDevTools } from 'staterx';
 
 // You can optionally pass a name to identify your StateRx
 // Object. If not, a name will be generated for you.
-const myValue = createValue(0, { name: 'myValue' });
-const anotherValue = createValue('Hello', { name: 'anotherValue' });
+const myValue = createValue({ key: 'myValue', default: 0 });
+const anotherValue = createValue({ key: 'anotherValue', default: 'Hello' });
 
 const store = createStore({
-  [myValue.name]: myValue,
-  [anotherValue.name]: anoterValue
+  [myValue.key]: myValue,
+  [anotherValue.key]: anoterValue
 });
 
 // optionally connect redux-dev-tools
@@ -69,7 +69,7 @@ Set a new state for the entire store. This will go through each individal Observ
 
 ```js
 store.setState({
-  [myValue.name]: 1,
-  [anotherValue.name]: 'Test'
+  [myValue.key]: 1,
+  [anotherValue.key]: 'Test'
 });
 ```

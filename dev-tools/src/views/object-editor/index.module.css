@@ -1,0 +1,21 @@
+.view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.editorWrapper {
+  flex: 1;
+}
+
+.editor {
+  width: 100%;
+}
+
+:global(.ace-monokai) {
+  background-color: #242424 !important;
+}
+
+:global(.ace-monokai .ace_gutter) {
+  background-color: #191919 !important;
+}

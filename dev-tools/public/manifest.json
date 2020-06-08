@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "StateRx DevTools",
+  "description": "StateRx debugging and tools for the Chrome developer console.",
+  "version": "1.0",
+  "permissions": ["*://*/*"],
+  "devtools_page": "dev-tools.html",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ]
+}
