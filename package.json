@@ -1,6 +1,6 @@
 {
   "name": "staterx-main",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "State management with RxJS",
   "homepage": "https://jamesmfriedman.github.io/staterx/",
   "scripts": {
