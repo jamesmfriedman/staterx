@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 import './styles';
 import App from './views/app';
 import * as serviceWorker from './serviceWorker';
-import { initDebugger } from './debugger';
+import { bridge } from '@common/bridge';
 
 if (process.env.NODE_ENV === 'production') {
-  initDebugger();
+  bridge.init();
 }
 
 ReactDOM.render(

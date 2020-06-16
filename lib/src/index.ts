@@ -4,4 +4,5 @@ export { createObject } from './create-object';
 export { createItems } from './create-items';
 export { createArray } from './create-array';
 export { connectReduxDevTools } from './redux-dev-tools';
+export { AnyAction } from './utils';
 export * from './react';

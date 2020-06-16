@@ -2,19 +2,13 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
 import { useRx } from 'staterx';
-import { objects, viewObject } from '../../debugger';
+import { objects, viewObject } from '@state';
+import { useLocalSearch } from '@src/common/hooks';
 
 export function ObjectsList() {
   const allObjects = useRx(objects.all$) || [];
   const selectedId = useRx(viewObject.state$);
-  const [term, setTerm] = useState('');
-
-  const cleanedTerm = term.toLowerCase().trim();
-  const filtered = cleanedTerm
-    ? allObjects.filter((val) =>
-        String(val.key).toLowerCase().includes(cleanedTerm)
-      )
-    : allObjects;
+  const { term, setTerm, items } = useLocalSearch(allObjects, ['key', 'state']);
 
   return (
     <div className={styles.list}>
@@ -27,7 +21,7 @@ export function ObjectsList() {
         />
       </header>
       <ul>
-        {filtered.map((obj) => {
+        {items.map((obj) => {
           return (
             <li
               key={obj.key}

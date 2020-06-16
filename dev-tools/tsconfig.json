@@ -1,4 +1,5 @@
 {
+  "extends": "./tscfonfig-extends.json",
   "compilerOptions": {
     "target": "es5",
     "lib": [

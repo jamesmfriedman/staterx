@@ -12,6 +12,10 @@
   width: 100%;
 }
 
+.spacer {
+  flex: 1;
+}
+
 :global(.ace-monokai) {
   background-color: #242424 !important;
 }

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "preserveSymlinks": true,
+    "baseUrl": "./",
+    "paths": {
+      "@src": ["src/"],
+      "@src/*": ["src/*"],
+      "@common": ["src/common"],
+      "@common/*": ["src/common/*"],
+      "@vendor": ["src/vendor"],
+      "@vendor/*": ["src/vendor/*"],
+      "@components": ["src/components"],
+      "@components/*": ["src/components/*"],
+      "@state": ["src/state"],
+      "@state/*": ["src/state/*"],
+      "@views/*": ["src/views/*"],
+      "@assets/*": ["src/assets/*"]
+    }
+  }
+}
