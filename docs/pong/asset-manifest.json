@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/staterx/pong/static/css/main.e943dbd5.chunk.css",
+    "main.js": "/staterx/pong/static/js/main.6fa6d57a.chunk.js",
+    "main.js.map": "/staterx/pong/static/js/main.6fa6d57a.chunk.js.map",
+    "runtime-main.js": "/staterx/pong/static/js/runtime-main.bba747e1.js",
+    "runtime-main.js.map": "/staterx/pong/static/js/runtime-main.bba747e1.js.map",
+    "static/js/2.3c266113.chunk.js": "/staterx/pong/static/js/2.3c266113.chunk.js",
+    "static/js/2.3c266113.chunk.js.map": "/staterx/pong/static/js/2.3c266113.chunk.js.map",
+    "index.html": "/staterx/pong/index.html",
+    "precache-manifest.aa3c6183e18f77d4130139e7e2f981b2.js": "/staterx/pong/precache-manifest.aa3c6183e18f77d4130139e7e2f981b2.js",
+    "service-worker.js": "/staterx/pong/service-worker.js",
+    "static/css/main.e943dbd5.chunk.css.map": "/staterx/pong/static/css/main.e943dbd5.chunk.css.map",
+    "static/js/2.3c266113.chunk.js.LICENSE.txt": "/staterx/pong/static/js/2.3c266113.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bba747e1.js",
+    "static/js/2.3c266113.chunk.js",
+    "static/css/main.e943dbd5.chunk.css",
+    "static/js/main.6fa6d57a.chunk.js"
+  ]
+}

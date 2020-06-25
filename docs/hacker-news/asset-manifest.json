@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/staterx/hacker-news/static/css/main.18e93c87.chunk.css",
+    "main.js": "/staterx/hacker-news/static/js/main.a23c85e0.chunk.js",
+    "main.js.map": "/staterx/hacker-news/static/js/main.a23c85e0.chunk.js.map",
+    "runtime-main.js": "/staterx/hacker-news/static/js/runtime-main.d162325f.js",
+    "runtime-main.js.map": "/staterx/hacker-news/static/js/runtime-main.d162325f.js.map",
+    "static/css/2.764ccc25.chunk.css": "/staterx/hacker-news/static/css/2.764ccc25.chunk.css",
+    "static/js/2.96697b45.chunk.js": "/staterx/hacker-news/static/js/2.96697b45.chunk.js",
+    "static/js/2.96697b45.chunk.js.map": "/staterx/hacker-news/static/js/2.96697b45.chunk.js.map",
+    "index.html": "/staterx/hacker-news/index.html",
+    "precache-manifest.2d1adc069fbfe39ff682f1afd187b4a5.js": "/staterx/hacker-news/precache-manifest.2d1adc069fbfe39ff682f1afd187b4a5.js",
+    "service-worker.js": "/staterx/hacker-news/service-worker.js",
+    "static/css/2.764ccc25.chunk.css.map": "/staterx/hacker-news/static/css/2.764ccc25.chunk.css.map",
+    "static/css/main.18e93c87.chunk.css.map": "/staterx/hacker-news/static/css/main.18e93c87.chunk.css.map",
+    "static/js/2.96697b45.chunk.js.LICENSE.txt": "/staterx/hacker-news/static/js/2.96697b45.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d162325f.js",
+    "static/css/2.764ccc25.chunk.css",
+    "static/js/2.96697b45.chunk.js",
+    "static/css/main.18e93c87.chunk.css",
+    "static/js/main.a23c85e0.chunk.js"
+  ]
+}

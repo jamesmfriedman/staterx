@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "npm run lib:setup",
     "dev:setup": "npm run lib:setup && cd ../ && npm run docs:setup && npm run hacker-news:setup && npm run pong:setup",
-    "build:all": "npm run lib:build && npm run docs:build && npm run pong:build && npm run hacker-news:build",
+    "build": "npm run lib:build && npm run docs:build && npm run pong:build && npm run hacker-news:build",
     "test": "cd lib && npm run test",
     "coverage": "cd lib && npm run coverage",
     "lib:build": "cd lib && npm run build",
